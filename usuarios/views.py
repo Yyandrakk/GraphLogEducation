@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.generic import TemplateView
 
 from .forms import FormRegister, FormLogin
 
@@ -28,24 +29,39 @@ def form_login_view(request):
                else:
                    return HttpResponse("Cuenta no activada")
            else:
-               return HttpResponse("Error en el login")
+               return HttpResponse("Error en el formulario")
+       else:
+           return HttpResponse("Error en el form")
     else:
         form = FormLogin();
 
     return render(request, 'usuarios/login.html', context={"form":form})
 
+class RegisterView(TemplateView):
+    template_name = 'usuarios/register.html'
+
+    def get_context_data(self, **kwargs):
+        
+
+
+
+
 def form_register_view(request):
 
-    form = FormRegister()
+
 
     if request.method == "POST":
         form = FormRegister(request.POST)
 
         if form.is_valid():
-            form.save(commit=True)
-            return form_login_view()
+            user = form.save(commit=False)
+            user.set_password(user.password)
+            user.save()
+            return HttpResponseRedirect(reverse(''))
         else:
-            print('Error form invalid')
-
+            print(form.errors)
+            return HttpResponse("Error en el registro")
+    else:
+        form = FormRegister()
 
     return render(request,'usuarios/register.html',context={"form":form})

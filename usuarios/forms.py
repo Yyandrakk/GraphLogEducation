@@ -36,7 +36,9 @@ class FormRegister(forms.ModelForm):
         passw2 = datos.get("val_password")
 
         if passw1 != passw2:
-            raise forms.ValidationError("Las contraseñas no coinciden")
+            raise forms.ValidationError({
+                'password': forms.ValidationError(_('No coinciden'),code='invalid'),
+            })
 
         return datos
 
