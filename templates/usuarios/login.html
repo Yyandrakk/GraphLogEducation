@@ -9,13 +9,16 @@
 </head>
 <body>
     <div class="container">
+        {% if form.errors %}
+                <p>No coinciden el usuario y la contraseña</p>
+        {% endif %}
         <form method="POST">
             <div class="form-group">
-                {{ form.username.errors }}
+
               {{ form.username.label_tag }}
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fas fa-user fa-fw"></i> </span>
-                       {{ form.username }}
+                    <input type="text" class="form-control" name="{{ form.username.name }}" id="{{ form.username.id }}" required maxlength="254" autofocus/>
                 </div>
 
             </div>
@@ -23,13 +26,14 @@
                {{ form.password.label_tag }}
                  <div class="input-group">
                     <span class="input-group-addon"><i class="fas fa-key fa-fw"></i> </span>
-                    {{ form.password }}
+                    <input type="text" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
                  </div>
             </div>
             {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}"/>
             <input type="submit" class="btn btn-primary" value="Submit">
         </form>
-        <p><a href="{% url 'register' %}" class="text-primary">Registrate</a></p>
+        <p><a href="{% url 'user:signup' %}" class="text-primary">Registrate</a></p>
     </div>
 </body>
 </html>
