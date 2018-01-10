@@ -1,0 +1,59 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+    <script defer src="{% static 'fontawesome-all.min.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
+    <title>Registro</title>
+</head>
+<body>
+    <div class="container">
+        <form method="POST">
+             <div class="form-group">
+              {{ form.username.label_tag }}
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-user fa-fw"></i> </span>
+                       {{ form.username }}
+                </div>
+
+            </div>
+            <div class="form-group">
+              {{ form.email.label_tag }}
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-at fa-fw"></i> </span>
+                       {{ form.email }}
+                </div>
+
+            </div>
+            <div class="form-group">
+               {{ form.password.label_tag }}
+                 <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-key fa-fw"></i> </span>
+                    {{ form.password }}
+                 </div>
+            </div>
+            <div class="form-group">
+               {{ form.val_password.label_tag }}
+                 <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-key fa-fw"></i> </span>
+                    {{ form.val_password }}
+                 </div>
+            </div>
+            <div class="form-group">
+               <div class="input-group">
+                   <div class="input-group-addon">
+                       <span class="input-group-text">Nombre y apellidos </span>
+                   </div>
+
+                   {{ form.first_name }}
+                   {{ form.last_name }}
+                </div>
+            </div>
+
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
