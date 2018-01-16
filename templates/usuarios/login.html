@@ -1,13 +1,28 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
-    <script defer src="{% static 'fontawesome-all.min.js' %}"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
+{% include  "Base/base.html" with tittle="Inicio de sesion"%}
+
+{% block navBarTop %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url "user:login" %}">GraphLog Education</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarDespegableTop">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url "user:login" %}">Autentificación</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "user:signup" %}">Registro</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% endblock %}
+
+{% block contenido %}
     <div class="container">
         {% if form.errors %}
                 <p>No coinciden el usuario y la contraseña</p>
@@ -17,7 +32,9 @@
 
               {{ form.username.label_tag }}
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fas fa-user fa-fw"></i> </span>
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-user fa-fw"></i></span>
+                    </div>
                     <input type="text" class="form-control" name="{{ form.username.name }}" id="{{ form.username.id }}" required maxlength="254" autofocus/>
                 </div>
 
@@ -25,15 +42,14 @@
             <div class="form-group">
                {{ form.password.label_tag }}
                  <div class="input-group">
-                    <span class="input-group-addon"><i class="fas fa-key fa-fw"></i> </span>
+                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key fa-fw"></i> </span></div>
                     <input type="text" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
                  </div>
             </div>
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}"/>
-            <input type="submit" class="btn btn-primary" value="Submit">
+            <input type="submit" class="btn btn-primary" value="Enviar">
         </form>
-        <p><a href="{% url 'user:signup' %}" class="text-primary">Registrate</a></p>
+
     </div>
-</body>
-</html>
+{% endblock %}
