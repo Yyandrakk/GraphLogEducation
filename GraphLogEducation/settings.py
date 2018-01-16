@@ -150,8 +150,8 @@ Media_URL = '/media/'
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
-LOGIN_URL = '/usuarios/login/'
+LOGIN_URL = 'user:login'
 
-LOGIN_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = 'graph:index'
 
 LOGOUT_REDIRECT_URL = LOGIN_URL

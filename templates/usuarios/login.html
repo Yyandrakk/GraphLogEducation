@@ -43,7 +43,7 @@
                {{ form.password.label_tag }}
                  <div class="input-group">
                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key fa-fw"></i> </span></div>
-                    <input type="text" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
+                    <input type="password" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
                  </div>
             </div>
             {% csrf_token %}

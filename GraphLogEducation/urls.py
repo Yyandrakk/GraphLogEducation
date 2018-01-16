@@ -20,5 +20,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('user/',include('usuarios.urls', namespace="user")),
+    path('', include('GraphLog.urls', namespace="graph")),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
