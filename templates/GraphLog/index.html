@@ -3,7 +3,7 @@
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{% url "user:login" %}">GraphLog Education</a>
+  <a class="navbar-brand" href="{% url "graph:index" %}">GraphLog Education</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -11,10 +11,10 @@
   <div class="collapse navbar-collapse" id="navbarDespegableTop">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
-        <a class="nav-link" href="{% url "user:login" %}">Autentificación</a>
+        <a class="nav-link" href="{% url "cursos:" %}">Cursos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url "user:signup" %}">Registro</a>
+        <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
     </ul>
   </div>
