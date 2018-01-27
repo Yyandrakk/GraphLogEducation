@@ -10,4 +10,10 @@ from django.views import generic
 
 class indexCursoView(LoginRequiredMixin,generic.ListView):
     template_name = "cursos/listCursos.html"
-    model = models.CursoMoodle
+    context_object_name = 'curso_list'
+    models = models.CursoMoodle.objects
+
+    def get_queryset(self):
+        queryset = super(indexCursoView, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+        return queryset

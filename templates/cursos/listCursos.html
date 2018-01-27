@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% include  "Base/base.html" with tittle="Cursos"%}
 
-</body>
-</html>
+{% block contenido %}
+<section class="py-5 bg-light">
+    <div class="container"><div class="card-columns">
+    {% for curso in curso_list %}
+       <div class="card bg-light">
+            <div class="card-header">
+               {{ curso.nombre }}
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ curso.desc }}</p>
+                <p class="card-text"><small class="text-muted">Umbral: {{ curso.umbral }}</small></p>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Ultima actualizacion {{ curso.actualizado }}</small>
+            </div>
+       </div>
+    {% empty %}
+       <h2 class="">No dispone de ningun curso</h2>
+    {% endfor %}
+    </div></div>
+</section>
+{% endblock %}
