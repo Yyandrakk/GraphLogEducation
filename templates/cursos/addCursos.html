@@ -1,4 +1,4 @@
-{% include  "Base/base.html" with tittle="GraphLogEducation"%}
+{% include  "Base/base.html" with tittle="Añadir Curso"%}
 
 {% block navBarTop %}
 
@@ -10,7 +10,7 @@
 
   <div class="collapse navbar-collapse" id="navbarDespegableTop">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
       </li>
       <li class="nav-item">
@@ -20,8 +20,4 @@
   </div>
 </nav>
 
-{% endblock %}
-
-{% block contenido %}
-    <h1 class="text-primary">HOLA MUNDO</h1>
 {% endblock %}

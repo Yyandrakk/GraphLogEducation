@@ -1,5 +1,28 @@
 {% include  "Base/base.html" with tittle="Cursos"%}
+{% block navBarTop %}
 
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <a class="navbar-brand" href="{% url "graph:index" %}">GraphLog Education</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarDespegableTop">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "cursos:add" %}">Añadir curso</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% endblock %}
 {% block contenido %}
 <section class="py-5 bg-light">
     <div class="container"><div class="card-columns">
@@ -17,7 +40,7 @@
             </div>
        </div>
     {% empty %}
-       <h2 class="">No dispone de ningun curso</h2>
+       <h2 class="display-3">No dispone de ningun curso</h2>
     {% endfor %}
     </div></div>
 </section>

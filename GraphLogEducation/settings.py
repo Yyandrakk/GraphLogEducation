@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'GraphLog.apps.GraphlogConfig',
-    'usuarios'
+    'usuarios',
+    'cursos'
     ,
 ]
 

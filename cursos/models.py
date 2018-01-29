@@ -16,5 +16,5 @@ class CursoMoodle(AbstractCurso):
     umbral = models.PositiveSmallIntegerField()
 
     class Meta:
-        ordering = ["-creado"]
+        ordering = ["-actualizado"]
         unique_together = ["profesor", "nombre"]
