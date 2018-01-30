@@ -7,11 +7,23 @@ class FormCursoMoodle(forms.ModelForm):
         model = CursoMoodle
         fields = ("nombre","desc","umbral")
 
-
-    def __init__(self,*args,**kargs):
-        super(FormCursoMoodle,self).__init__(*args,**kargs)
+    def __init__(self,*args,**kwargs):
+        self.user = kwargs.pop("instance", None)
+        super(FormCursoMoodle,self).__init__(*args,**kwargs)
         for v in self.visible_fields():
             v.field.widget.attrs['class'] = 'form-control'
+
+    def clean(self):
+        datos = super(FormCursoMoodle,self).clean()
+        nombre = datos['nombre']
+
+        if CursoMoodle.objects.filter(nombre=nombre,profesor_id=self.user.id).exists():
+            raise forms.ValidationError({
+                'nombre': forms.ValidationError('Ya tiene un curso con ese nombre', code='invalid'),
+            })
+
+        return datos
+
 
 
 

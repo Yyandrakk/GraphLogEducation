@@ -31,3 +31,8 @@ class addCursoView(LoginRequiredMixin, generic.CreateView):
         self.object.profesor = self.request.user
         self.object.save()
         return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(addCursoView, self).get_form_kwargs()
+        kwargs['instance'] = self.request.user
+        return kwargs
