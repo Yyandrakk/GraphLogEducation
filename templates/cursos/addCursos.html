@@ -16,8 +16,44 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "cursos:add" %}">Añadir curso</a>
+      </li>
     </ul>
   </div>
 </nav>
 
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        <form method="POST">
+
+             <div class="form-group">
+              {{ form.nombre.label_tag }}
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user fa-fw"></i></span></div>
+                       {{ form.nombre }}
+                </div>
+
+            </div>
+            <div class="form-group">
+              {{ form.desc.label_tag }}
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-at fa-fw"></i></span></div>
+                       {{ form.desc }}
+                </div>
+
+            </div>
+            <div class="form-group">
+               {{ form.umbral.label_tag }}
+                 <div class="input-group">
+                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key fa-fw"></i></span></div>
+                    {{ form.umbral }}
+                 </div>
+            </div>
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="Enviar">
+        </form>
+    </div>
 {% endblock %}
