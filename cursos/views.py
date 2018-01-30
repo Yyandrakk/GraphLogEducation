@@ -27,5 +27,7 @@ class addCursoView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("cursos:todos")
 
     def form_valid(self, form):
-        form.save(profesor=self.request.user)
+        self.object=form.save(commit=False)
+        self.object.profesor = self.request.user
+        self.object.save()
         return super().form_valid(form)

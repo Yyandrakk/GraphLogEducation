@@ -14,9 +14,4 @@ class FormCursoMoodle(forms.ModelForm):
             v.field.widget.attrs['class'] = 'form-control'
 
 
-    def save(self, commit=True, profesor=None):
-        curso = super(FormCursoMoodle, self).save(commit=False)
-        if commit and profesor != None:
-            curso.profesor_id = profesor.id
-            curso.save()
-        return curso
+
