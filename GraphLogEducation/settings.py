@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 MEDIA_ROOT = MEDIA_DIR
-Media_URL = '/media/'
+MEDIA_URL = '/media/'
 
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
@@ -156,3 +156,5 @@ LOGIN_URL = 'user:login'
 LOGIN_REDIRECT_URL = 'graph:index'
 
 LOGOUT_REDIRECT_URL = LOGIN_URL
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800

@@ -1,6 +1,8 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 # Create your models here.
-
+def user_directory_path(instance, filename):
+    return 'user_{0}/curso_{1}/{2}'.format(instance.profesor.id, instance.nombre, filename)
 
 class AbstractCurso(models.Model):
     profesor = models.ForeignKey('usuarios.Usuario',on_delete = models.CASCADE)
@@ -14,7 +16,9 @@ class AbstractCurso(models.Model):
 
 class CursoMoodle(AbstractCurso):
     umbral = models.PositiveSmallIntegerField()
+    documento = models.FileField(upload_to=user_directory_path,validators=[FileExtensionValidator(['csv'])])
 
     class Meta:
         ordering = ["-actualizado"]
         unique_together = ["profesor", "nombre"]
+

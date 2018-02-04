@@ -9,4 +9,4 @@ app_name = 'cursos'
 urlpatterns = [
     path('',indexCursoView.as_view(),name='todos'),
     path('add/', addCursoView.as_view(),name="add"),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
