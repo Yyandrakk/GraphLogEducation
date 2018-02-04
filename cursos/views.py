@@ -1,7 +1,11 @@
+from random import random
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 
+from cursos.models import CursoMoodle
 from . import models
 from .forms import FormCursoMoodle
 from django.contrib.auth.mixins import(
@@ -21,6 +25,21 @@ class indexCursoView(LoginRequiredMixin,generic.ListView):
         return self.models.objects.filter(profesor_id=self.request.user.id)
 
 
+
+def unique_slug_generator(slug):
+    """
+    This is for a Django project and it assumes your instance
+    has a model with a slug field and a title character (char) field.
+    """
+
+    if CursoMoodle.objects.filter(slug=slug).exists():
+        new_slug = "{slug}-{rand}".format(
+            slug=slug,
+            rand=random.randint(0,1000)
+        )
+        return unique_slug_generator(slug=new_slug)
+    return slug
+
 class addCursoView(LoginRequiredMixin, generic.CreateView):
     template_name = "cursos/addCursos.html"
     form_class = FormCursoMoodle
@@ -29,6 +48,7 @@ class addCursoView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         self.object=form.save(commit=False)
         self.object.profesor = self.request.user
+        self.object.slug = unique_slug_generator(slugify(self.object.nombre))
         self.object.save()
         return super().form_valid(form)
 

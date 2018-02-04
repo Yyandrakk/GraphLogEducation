@@ -9,6 +9,7 @@ class AbstractCurso(models.Model):
     nombre = models.CharField(max_length=50,null=False,blank=False)
     desc = models.TextField(max_length=200)
     actualizado = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(populate_from='nombre',unique_with=('profesor__id', 'nombre'))
 
     class Meta:
         abstract = True
@@ -17,6 +18,7 @@ class AbstractCurso(models.Model):
 class CursoMoodle(AbstractCurso):
     umbral = models.PositiveSmallIntegerField()
     documento = models.FileField(upload_to=user_directory_path,validators=[FileExtensionValidator(['csv'])])
+    procesado = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-actualizado"]
