@@ -9,7 +9,7 @@ class AbstractCurso(models.Model):
     nombre = models.CharField(max_length=50,null=False,blank=False)
     desc = models.TextField(max_length=200)
     actualizado = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(populate_from='nombre',unique_with=('profesor__id', 'nombre'))
+    slug = models.SlugField()
 
     class Meta:
         abstract = True
