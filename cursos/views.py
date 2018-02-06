@@ -5,13 +5,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 
+
 from cursos.models import CursoMoodle
 from . import models
 from .forms import FormCursoMoodle
-from django.contrib.auth.mixins import(
-    LoginRequiredMixin,
-    PermissionRequiredMixin
-)
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from django.views import generic
 # Create your views here.
@@ -56,3 +55,19 @@ class addCursoView(LoginRequiredMixin, generic.CreateView):
         kwargs = super(addCursoView, self).get_form_kwargs()
         kwargs['instance'] = self.request.user
         return kwargs
+
+
+class detailCursoView(LoginRequiredMixin ,generic.DetailView):
+    template_name = "cursos/detailCurso.html"
+    model = models.CursoMoodle
+    context_object_name = 'curso'
+
+    def user_test(self,request,slug):
+        return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()
+
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_test(request,kwargs.get('slug','')):
+            return redirect("cursos:todos")
+        return super().dispatch(
+            request, *args, **kwargs)

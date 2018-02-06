@@ -29,7 +29,7 @@
     {% for curso in curso_list %}
        <div class="card bg-light">
             <div class="card-header">
-               {{ curso.nombre }}
+               <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
             </div>
             <div class="card-body">
                 <p class="card-text">{{ curso.desc }}</p>
