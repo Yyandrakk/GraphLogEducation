@@ -24,3 +24,18 @@ class CursoMoodle(AbstractCurso):
         ordering = ["-actualizado"]
         unique_together = ["profesor", "nombre"]
 
+
+class EstudianteCursoMoodle(models.Model):
+    curso = models.ForeignKey(CursoMoodle,on_delete = models.CASCADE)
+    nombre = models.CharField(max_length=100,null=False,blank=False)
+
+class MaterialCursoMoodle(models.Model):
+    ARCHIVO = 'AR'
+    CUESTIONARIO = 'CU'
+    TYPES = ((ARCHIVO,"Archivo"), (CUESTIONARIO,"Fichero"))
+    curso = models.ForeignKey(CursoMoodle,on_delete = models.CASCADE)
+    nombre = models.CharField(max_length=100,null=False,blank=False)
+    tipo = models.CharField(max_length=2,choices=TYPES,null=False)
+
+    class Meta:
+        unique_together = ["curso", "nombre","tipo"]

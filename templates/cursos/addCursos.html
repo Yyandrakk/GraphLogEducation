@@ -72,10 +72,14 @@
             </div>
 
             <div class="form-group">
-               {{ form.documento.label_tag }}
+
                  <div class="input-group">
                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-file-excel fa-fw"></i></span></div>
-                    {{ form.documento }}
+                     <div class="custom-file">
+                         {{ form.documento }}
+                         <label class="custom-file-label" for="{{ form.documento.id }}"> {{ form.documento.label }}</label>
+                         
+                     </div>
                  </div>
             </div>
             {% csrf_token %}

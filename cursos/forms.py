@@ -1,5 +1,7 @@
 from django import forms
+
 from .models import CursoMoodle
+
 
 class FormCursoMoodle(forms.ModelForm):
 
@@ -13,7 +15,7 @@ class FormCursoMoodle(forms.ModelForm):
         for v in self.visible_fields():
             v.field.widget.attrs['class'] = 'form-control'
 
-        self.fields['documento'].widget.attrs['class'] = 'form-control-file'
+        self.fields['documento'].widget.attrs['class'] = 'custom-file-input'
 
     def clean(self):
         datos = super(FormCursoMoodle,self).clean()
