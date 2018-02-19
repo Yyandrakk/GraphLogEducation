@@ -27,11 +27,13 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
             archivo.save()
 
         for name in cues_unicos:
-            cuestionario = MaterialCursoMoodle(nombre=name, curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
-            cuestionario.save()
+                cuestionario = MaterialCursoMoodle(nombre=name, curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
+                cuestionario.save()
+
+        
 
 
-    else:
-        if "documento" is kwargs.get("update_fields",False):
-            print("documento")
+        else:
+            if "documento" is kwargs.get("update_fields",False):
+                print("documento")
 
