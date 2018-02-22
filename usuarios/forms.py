@@ -24,7 +24,7 @@ class FormRegister(forms.ModelForm):
 
         if passw1 != passw2:
             raise forms.ValidationError({
-                'password': forms.ValidationError(_('No coinciden'),code='invalid'),
+                'password': forms.ValidationError('No coinciden',code='invalid'),
             })
 
         return datos

@@ -1,0 +1,89 @@
+{% include  "Base/base.html" with tittle="Añadir Curso"%}
+
+{% block navBarTop %}
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <a class="navbar-brand" href="{% url "graph:index" %}">GraphLog Education</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarDespegableTop">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url "cursos:add" %}">Añadir curso</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% endblock %}
+
+{% block contenido %}
+
+    {% if form.errors %}
+        <div class="alert alert-error">
+          <h4>Please fix the following errors</h4>
+          <ul>
+            {% for field in form %}
+              {% if field.errors %}
+                {% for error in field.errors %}
+                  <li><a href="#id_{{ field.name }}" class="error">{{ error|escape }}</a></li>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+          {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+          {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data">
+             <div class="form-group">
+              {{ form.nombre.label_tag }}
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user fa-fw"></i></span></div>
+                       {{ form.nombre }}
+                </div>
+
+            </div>
+            <div class="form-group">
+              {{ form.desc.label_tag }}
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-comment fa-fw"></i></span></div>
+                       {{ form.desc }}
+                </div>
+
+            </div>
+            <div class="form-group">
+               {{ form.umbral.label_tag }}
+                 <div class="input-group">
+                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-clock fa-fw"></i></span></div>
+                    {{ form.umbral }}
+                 </div>
+            </div>
+
+            <div class="form-group">
+
+                 <div class="input-group">
+                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-file-excel fa-fw"></i></span></div>
+                     <div class="custom-file">
+                         {{ form.documento }}
+                         <label class="custom-file-label" for="{{ form.documento.id }}"> {{ form.documento.label }}</label>
+                         
+                     </div>
+                 </div>
+            </div>
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="Enviar">
+        </form>
+    </div>
+{% endblock %}
