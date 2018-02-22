@@ -30,10 +30,7 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                 cuestionario = MaterialCursoMoodle(nombre=name, curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
                 cuestionario.save()
 
-        
-
-
-        else:
-            if "documento" is kwargs.get("update_fields",False):
-                print("documento")
+    else:
+        if "documento" is kwargs.get("update_fields",False):
+            print("documento")
 
