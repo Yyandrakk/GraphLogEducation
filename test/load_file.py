@@ -16,9 +16,13 @@ def load(path):
     # print(set(map(func, fil_cues['Contexto del evento'].unique())))
     times = pd.DatetimeIndex(df['Hora'])
     #print(df.groupby(pd.Grouper(key='Hora', freq='24H')).count())
-    print(pd.DataFrame({'count' :df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index())
-    print(pd.DataFrame({'count':df.groupby([times.hour]).size()}).reset_index())
-
+    # aux=pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index()
+    # print(pd.DataFrame({'count' :df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index())
+    #aux = pd.DataFrame({'count':df.groupby([times.hour]).size()}).reset_index()
+    #print(pd.DataFrame({'count':df.groupby([times.hour]).size()}).reset_index())
+    #print(type(aux.iloc[0,0]))
+    for fila in pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index().iterrows():
+        print(fila)
 
 if __name__ == '__main__':
     load("../media/user_1/logs_2017_18464_311_20171211-1635.csv")

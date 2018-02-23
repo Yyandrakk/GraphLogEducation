@@ -2,7 +2,7 @@ import pandas as pd
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle
+from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, TiempoDedicadoCursoMoodle
 
 
 @receiver(post_save, sender=CursoMoodle)
@@ -27,8 +27,16 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
             archivo.save()
 
         for name in cues_unicos:
-                cuestionario = MaterialCursoMoodle(nombre=name, curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
-                cuestionario.save()
+             cuestionario = MaterialCursoMoodle(nombre=name, curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
+             cuestionario.save()
+
+        for fila in pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index().iterrows():
+            dia=TiempoDedicadoCursoMoodle(curso=instance,timestamp=pd.to_datetime(fila['Hora'], unit='s'),contador=fila["count"],tipo=TiempoDedicadoCursoMoodle.DIA)
+            dia.save()
+
+        CursoMoodle.objects.filter(pk=instance.pk).update(procesado=True)
+
+
 
     else:
         if "documento" is kwargs.get("update_fields",False):

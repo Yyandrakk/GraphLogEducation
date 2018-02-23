@@ -39,3 +39,15 @@ class MaterialCursoMoodle(models.Model):
 
     class Meta:
         unique_together = ["curso", "nombre","tipo"]
+
+class TiempoDedicadoCursoMoodle(models.Model):
+    DIA = 'DI'
+    HORA = 'HO'
+    TYPES = ((DIA,"Dia"), (HORA, "Hora"))
+    curso = models.ForeignKey(CursoMoodle, on_delete=models.CASCADE)
+    contador = models.IntegerField(null=False,blank=False)
+    tipo = models.CharField(max_length=2, choices=TYPES, null=False)
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        unique_together = ["curso", "timestamp","tipo"]
