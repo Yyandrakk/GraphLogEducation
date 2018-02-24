@@ -1,12 +1,12 @@
 from random import random
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 
 
-from cursos.models import CursoMoodle
+from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle
 from . import models
 from .forms import FormCursoMoodle
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,8 +22,6 @@ class indexCursoView(LoginRequiredMixin,generic.ListView):
 
     def get_queryset(self):
         return self.models.objects.filter(profesor_id=self.request.user.id)
-
-
 
 def unique_slug_generator(slug):
     """
@@ -71,3 +69,12 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
             return redirect("cursos:todos")
         return super().dispatch(
             request, *args, **kwargs)
+
+
+def ajaxCharts(request):
+    charts=[]
+    id = request.GET.get('id', None)
+    if id != None and CursoMoodle.objects.filter(pk=id).exists():
+        dias = TiempoDedicadoCursoMoodle.objects.filter(curso__profesor_id=id,tipo=TiempoDedicadoCursoMoodle.DIA)
+
+    return JsonResponse(charts)

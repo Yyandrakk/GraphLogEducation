@@ -9,7 +9,8 @@ from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, Tie
 def creacion_informacion_curso(sender,instance,created, **kwargs):
 
     if created:
-        df = pd.read_csv(instance.documento)
+        dateparse = lambda x: pd.datetime.strptime(x, '%d/%m/%Y %H:%M')
+        df = pd.read_csv(instance.documento,parse_dates=['Hora'], date_parser=dateparse, dayfirst=True)
         n_unicos = filter(lambda n: n != '-' and "Administrador" not in n, df['Nombre completo del usuario'].unique())
 
         for name in n_unicos:
@@ -30,13 +31,12 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
              cuestionario = MaterialCursoMoodle(nombre=name, curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
              cuestionario.save()
 
-        for fila in pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index().iterrows():
-            dia=TiempoDedicadoCursoMoodle(curso=instance,timestamp=pd.to_datetime(fila['Hora'], unit='s'),contador=fila["count"],tipo=TiempoDedicadoCursoMoodle.DIA)
+        auxDiasDf = pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index()
+        for fila in auxDiasDf.itertuples():
+            dia=TiempoDedicadoCursoMoodle(curso=instance,timestamp=pd.to_datetime(fila.Hora, unit='s'),contador=fila.count,tipo=TiempoDedicadoCursoMoodle.DIA)
             dia.save()
 
-        CursoMoodle.objects.filter(pk=instance.pk).update(procesado=True)
-
-
+        CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
 
     else:
         if "documento" is kwargs.get("update_fields",False):

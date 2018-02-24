@@ -1,4 +1,6 @@
-{% include  "Base/base.html" with tittle="Detalle Curso"%}
+{% load staticfiles %}
+{% include  "Base/base.html" with tittle=curso.nombre%}
+{% block jsLoad %}<script defer src="{% static 'js/Chart.bundle.min.js' %}"></script>{% endblock %}
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -22,7 +24,34 @@
 {% endblock %}
 
 {% block contenido %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{ curso.nombre }}</h1>
+        <div id="container_charts" class="container">
 
-<h1>{{ curso.nombre }}</h1>
+        </div>
+    </div>
+    </div>
 
+<script>
+
+     $(document).ready(function() {
+
+         $.ajax({
+             type:"POST",
+             url:"{% url "cursos:ajax" %}",
+             data: {
+                'id': {{ curso.id }}
+             },
+             dataType: 'json',
+             success:crearGraficos
+         });
+
+     });
+
+
+    function crearGraficos(datos) {
+
+    }
+</script>
 {% endblock %}

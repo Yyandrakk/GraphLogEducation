@@ -29,7 +29,11 @@
     {% for curso in curso_list %}
        <div class="card bg-light">
             <div class="card-header">
-               <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
+                {% if curso.procesado %}
+                    <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
+                {% else %}
+                    <a class="card-link disabled">{{ curso.nombre }}</a>
+                {% endif %}
             </div>
             <div class="card-body">
                 <p class="card-text">{{ curso.desc }}</p>
