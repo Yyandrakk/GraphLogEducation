@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% include  "Base/base.html" with tittle=curso.nombre%}
-{% block jsLoad %}<script defer src="{% static 'js/Chart.bundle.min.js' %}"></script>{% endblock %}
+{% block jsLoad %}<script src="{% static 'js/Chart.bundle.min.js' %}"></script>{% endblock %}
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -26,9 +26,8 @@
 {% block contenido %}
 <div class="jumbotron">
     <div class="container">
-        <h1>{{ curso.nombre }}</h1>
-        <div id="container_charts" class="container">
-
+        <h1 class="h1 align-content-center">{{ curso.nombre }}</h1>
+        <div id="container_charts" class="container-fluid">
         </div>
     </div>
     </div>
@@ -36,9 +35,8 @@
 <script>
 
      $(document).ready(function() {
-
          $.ajax({
-             type:"POST",
+             type:"GET",
              url:"{% url "cursos:ajax" %}",
              data: {
                 'id': {{ curso.id }}
@@ -50,7 +48,23 @@
      });
 
 
-    function crearGraficos(datos) {
+    function crearGraficos(datos,status,xhr) {
+        var col = 0;
+        var divContainer = $("#container_charts");
+        datos.forEach(function (value, index) {
+            if(col === 3){
+                col=0;
+                divContainer.append("</div>");
+            }
+            if(col === 0){
+                divContainer.append("<div class=\"row\">");
+            }
+            divContainer.append("<div class=\"col\">");
+            divContainer.append("<canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas>");
+            new Chart($("#chart-"+index), value);
+            divContainer.append("</div>");
+            col++
+        })
 
     }
 </script>

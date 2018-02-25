@@ -13,7 +13,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from django.views import generic
-# Create your views here.
 
 class indexCursoView(LoginRequiredMixin,generic.ListView):
     template_name = "cursos/listCursos.html"
@@ -24,10 +23,6 @@ class indexCursoView(LoginRequiredMixin,generic.ListView):
         return self.models.objects.filter(profesor_id=self.request.user.id)
 
 def unique_slug_generator(slug):
-    """
-    This is for a Django project and it assumes your instance
-    has a model with a slug field and a title character (char) field.
-    """
 
     if CursoMoodle.objects.filter(slug=slug).exists():
         new_slug = "{slug}-{rand}".format(
@@ -71,10 +66,20 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
             request, *args, **kwargs)
 
 
+
+
 def ajaxCharts(request):
     charts=[]
     id = request.GET.get('id', None)
     if id != None and CursoMoodle.objects.filter(pk=id).exists():
-        dias = TiempoDedicadoCursoMoodle.objects.filter(curso__profesor_id=id,tipo=TiempoDedicadoCursoMoodle.DIA)
+        dias = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id,tipo=TiempoDedicadoCursoMoodle.DIA)
+        chart = {'type': 'line'}
+        labels = []
+        data = []
+        for dia in dias:
+            labels.append(format(dia.timestamp,"%d/%m/%Y"))
+            data.append(dia.contador)
+        chart['data'] = {'labels':labels,'datasets':[{'data':data, 'label':'Eventos'}]}
+        charts.append(chart)
 
-    return JsonResponse(charts)
+    return JsonResponse(charts,safe=False)
