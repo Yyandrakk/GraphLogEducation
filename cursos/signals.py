@@ -36,6 +36,12 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
             dia=TiempoDedicadoCursoMoodle(curso=instance,timestamp=pd.to_datetime(fila.Hora, unit='s'),contador=fila.count,tipo=TiempoDedicadoCursoMoodle.DIA)
             dia.save()
 
+        times = pd.DatetimeIndex(df['Hora'])
+        for fila in pd.DataFrame({'count':df.groupby([times.hour]).size()}).reset_index().itertuples():
+            hora = TiempoDedicadoCursoMoodle(curso=instance, timestamp=pd.to_datetime(fila.Hora, unit='h'),
+                                            contador=fila.count, tipo=TiempoDedicadoCursoMoodle.HORA)
+            hora.save()
+
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
 
     else:

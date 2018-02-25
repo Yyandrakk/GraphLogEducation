@@ -59,10 +59,8 @@
             if(col === 0){
                 divContainer.append("<div class=\"row\">");
             }
-            divContainer.append("<div class=\"col\">");
-            divContainer.append("<canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas>");
+            divContainer.append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
             new Chart($("#chart-"+index), value);
-            divContainer.append("</div>");
             col++
         })
 

@@ -66,7 +66,15 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
             request, *args, **kwargs)
 
 
-
+def createChart(type,labels,data,tittle,label):
+    '''
+    :param type: Tipo de grafico
+    :param labels: Etiquetas del eje x
+    :param data: Datos del eje y
+    :param tittle: Titulo del grafico
+    :param label: Leyenda
+    :return:
+    '''
 
 def ajaxCharts(request):
     charts=[]
@@ -79,6 +87,16 @@ def ajaxCharts(request):
         for dia in dias:
             labels.append(format(dia.timestamp,"%d/%m/%Y"))
             data.append(dia.contador)
+        chart['data'] = {'labels':labels,'datasets':[{'data':data, 'label':'Eventos'}]}
+        charts.append(chart)
+
+        chart = {'type': 'bar'}
+        labels = []
+        data = []
+        horas = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id, tipo=TiempoDedicadoCursoMoodle.HORA)
+        for hora in horas:
+            labels.append(format(hora.timestamp,"%H"))
+            data.append(hora.contador)
         chart['data'] = {'labels':labels,'datasets':[{'data':data, 'label':'Eventos'}]}
         charts.append(chart)
 
