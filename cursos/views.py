@@ -1,18 +1,16 @@
 from random import random
 
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
-
+from django.views import generic
 
 from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle
 from . import models
 from .forms import FormCursoMoodle
-from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-from django.views import generic
 
 class indexCursoView(LoginRequiredMixin,generic.ListView):
     template_name = "cursos/listCursos.html"
@@ -87,7 +85,7 @@ def ajaxCharts(request):
         for dia in dias:
             labels.append(format(dia.timestamp,"%d/%m/%Y"))
             data.append(dia.contador)
-        chart['data'] = {'labels':labels,'datasets':[{'data':data, 'label':'Eventos'}]}
+        chart['data'] = {'labels':labels,'datasets':[{'data':data,'borderColor': "#3e95cd", 'label':'Eventos'}]}
         charts.append(chart)
 
         chart = {'type': 'bar'}
@@ -97,7 +95,8 @@ def ajaxCharts(request):
         for hora in horas:
             labels.append(format(hora.timestamp,"%H"))
             data.append(hora.contador)
-        chart['data'] = {'labels':labels,'datasets':[{'data':data, 'label':'Eventos'}]}
+
+        chart['data'] = {'labels':labels,'datasets':[{'data':data,'backgroundColor': ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#C4A73D","#7EC44A","#C44148","#C4249F", "#110EC4","#AF19FF","#18FFDD","#FFD558","#3e96cd", "#5e5ea2","#3c3a9f","#e823b9","#c45810","#CAA73D","#7E444A","#C43148","#C4219F", "#113EC4","#AF29FF","#18FFAD"], 'label':'Eventos'}]}
         charts.append(chart)
 
     return JsonResponse(charts,safe=False)

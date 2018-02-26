@@ -50,16 +50,17 @@
 
     function crearGraficos(datos,status,xhr) {
         var col = 0;
+        var row=0;
         var divContainer = $("#container_charts");
         datos.forEach(function (value, index) {
             if(col === 3){
                 col=0;
-                divContainer.append("</div>");
+                row++;
             }
             if(col === 0){
-                divContainer.append("<div class=\"row\">");
+                divContainer.append("<div id=\"row"+row+"\" class=\"row\">");
             }
-            divContainer.append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
+            $("#row"+row).append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
             new Chart($("#chart-"+index), value);
             col++
         })
