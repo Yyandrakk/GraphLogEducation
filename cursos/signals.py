@@ -43,6 +43,7 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
             hora.save()
 
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
+        
 
     else:
         if "documento" is kwargs.get("update_fields",False):

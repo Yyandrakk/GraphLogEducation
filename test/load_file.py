@@ -10,7 +10,7 @@ def load(path):
     # fil_arc_cues = df[fil_arc] or df[fil_cues]
     # #aux = df.loc[fil_arc_cues,'Contexto del evento']
     # aux=df['Contexto del evento'].where(lambda t: "Archivo:" in t or "Cuestionario:" in t).dropna()
-    # func = lambda s: s.split(':')[1].strip()
+    # func = lambda s: s.split(':')[1].strip()auth_group_permissions
     # print(list(map(func,fil_arc['Contexto del evento'].unique())))
     # print(set(map(func, fil_cues['Contexto del evento'].unique())))
     times = pd.DatetimeIndex(df['Hora'])
