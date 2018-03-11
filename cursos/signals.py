@@ -42,6 +42,17 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                                             contador=fila.count, tipo=TiempoDedicadoCursoMoodle.HORA)
             hora.save()
 
+        std=''
+        id=-1
+        for fila in pd.DataFrame({'count': df.groupby([pd.Grouper(key='Nombre completo del usuario'),pd.Grouper(key='Hora', freq='D')]).size()}).reset_index().itertuples():
+            if std != fila._1:
+                aux = EstudianteCursoMoodle(nombre=fila._1)
+                std = aux.nombre
+                id = aux.id
+            dia = TiempoDedicadoCursoMoodle(curso=instance, timestamp=pd.to_datetime(fila.Hora, unit='s'),
+                                            contador=fila.count, tipo=TiempoDedicadoCursoMoodle.DIA_STD, estudiante_id=id)
+            dia.save()
+
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
         
 
