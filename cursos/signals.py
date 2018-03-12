@@ -2,7 +2,8 @@ import pandas as pd
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, TiempoDedicadoCursoMoodle
+from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, TiempoDedicadoCursoMoodle, \
+    TiempoDedicadoEstudianteCursoMoodle
 
 
 @receiver(post_save, sender=CursoMoodle)
@@ -11,7 +12,9 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
     if created:
         dateparse = lambda x: pd.datetime.strptime(x, '%d/%m/%Y %H:%M')
         df = pd.read_csv(instance.documento,parse_dates=['Hora'], date_parser=dateparse, dayfirst=True)
-        n_unicos = filter(lambda n: n != '-' and "Administrador" not in n, df['Nombre completo del usuario'].unique())
+        filter = df.apply(lambda fila: fila.iloc[1] != '-' and "Administrador" not in fila.iloc[1], axis=1)
+        df = df[filter]
+        n_unicos = df['Nombre completo del usuario'].unique()
 
         for name in n_unicos:
             alumno = EstudianteCursoMoodle(nombre=name,curso=instance)
@@ -49,8 +52,8 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                 aux = EstudianteCursoMoodle(nombre=fila._1)
                 std = aux.nombre
                 id = aux.id
-            dia = TiempoDedicadoCursoMoodle(curso=instance, timestamp=pd.to_datetime(fila.Hora, unit='s'),
-                                            contador=fila.count, tipo=TiempoDedicadoCursoMoodle.DIA_STD, estudiante_id=id)
+            dia = TiempoDedicadoEstudianteCursoMoodle(curso=instance, timestamp=pd.to_datetime(fila.Hora, unit='s'),
+                                            contador=fila.count, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD, estudiante_id=id)
             dia.save()
 
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)

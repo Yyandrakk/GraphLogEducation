@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import generic
 
-from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle
+from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle
 from . import models
 from .forms import FormCursoMoodle
 
@@ -54,6 +54,11 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
     template_name = "cursos/detailCurso.html"
     model = models.CursoMoodle
     context_object_name = 'curso'
+
+    def get_context_data(self, **kwargs):
+        context = super(detailCursoView,self).get_context_data()
+        context['estudiantes'] = EstudianteCursoMoodle.objects.filter(curso__id=context['curso'].id).order_by('nombre')
+        return context
 
     def user_test(self,request,slug):
         return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()
@@ -102,7 +107,6 @@ def ajaxCharts(request):
             data.append((semana['s'] / count['total']) * 100)
         chart['data'] = {'labels': labels, 'datasets': [{'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos'}]}
         charts.append(chart)
-
         # Grafica hora/#evento
         chart = {'type': 'bar'}
         labels = []
