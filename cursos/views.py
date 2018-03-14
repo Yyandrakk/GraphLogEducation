@@ -121,3 +121,8 @@ def ajaxCharts(request):
         charts.append(chart)
 
     return JsonResponse(charts,safe=False)
+
+def ajaxSTDCharts(request):
+    charts = []
+    id = request.GET.get('id', None)
+    id_std =  request.GET.get('id_std', None)

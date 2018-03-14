@@ -58,16 +58,7 @@
 <script>
 
      $(document).ready(function() {
-         $.ajax({
-             type:"GET",
-             url:"{% url "cursos:ajax" %}",
-             data: {
-                'id': {{ curso.id }}
-             },
-             dataType: 'json',
-             success:crearGraficos
-         });
-
+         pestanyaGeneral();
      });
 
      function cambioPestanya(esUsuarios) {
@@ -77,11 +68,40 @@
             divSel.attr('class', 'col visible');
             $("#liGeneral").attr('class','page-item');
             $("#liSTD").attr('class','page-item active');
+            pestanyaUsuarios();
         }else{
            divSel.attr('class', 'col invisible');
            $("#liGeneral").attr('class','page-item active');
            $("#liSTD").attr('class','page-item');
+           pestanyaGeneral();
         }
+
+     }
+
+     function pestanyaUsuarios(){
+            $.ajax({
+             type:"GET",
+             url:"{% url "cursos:ajaxSTD" %}",
+             data: {
+                'id': {{ curso.id }},
+                 'id_std':$("#liSTD option:selected").val()
+             },
+             dataType: 'json',
+             success:crearGraficos
+         });
+
+     }
+
+     function pestanyaGeneral(){
+        $.ajax({
+             type:"GET",
+             url:"{% url "cursos:ajaxGeneral" %}",
+             data: {
+                'id': {{ curso.id }}
+             },
+             dataType: 'json',
+             success:crearGraficos
+         });
 
      }
 
@@ -101,7 +121,7 @@
             $("#row"+row).append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
             new Chart($("#chart-"+index), value);
             col++
-        })
+        });
 
     }
 </script>
