@@ -9,7 +9,8 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import generic
 
-from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle
+from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle, \
+    TiempoDedicadoEstudianteCursoMoodle
 from . import models
 from .forms import FormCursoMoodle
 
@@ -125,4 +126,18 @@ def ajaxCharts(request):
 def ajaxSTDCharts(request):
     charts = []
     id = request.GET.get('id', None)
-    id_std =  request.GET.get('id_std', None)
+    id_std = request.GET.get('id_std', None)
+    if id != None and id_std != None and EstudianteCursoMoodle.objects.filter(pk=id_std,curso_id=id).exists():
+        dias = TiempoDedicadoEstudianteCursoMoodle.objects.filter(curso_id=id,estudiante_id=id_std, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD)
+        count = TiempoDedicadoEstudianteCursoMoodle.objects.filter(curso_id=id,estudiante_id=id_std, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD).aggregate(
+            total=Sum('contador'))
+        chart = {'type': 'line'}
+        labels = []
+        data = []
+        for dia in dias:
+            labels.append(format(dia.timestamp, "%d/%m/%Y"))
+            data.append((dia.contador / count['total']) * 100)
+        chart['data'] = {'labels': labels, 'datasets': [{'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos'}]}
+        charts.append(chart)
+
+    return JsonResponse(charts, safe=False)

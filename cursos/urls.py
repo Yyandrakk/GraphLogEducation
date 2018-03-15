@@ -9,5 +9,5 @@ urlpatterns = [
     path('add/', addCursoView.as_view(),name="add"),
     path('<slug:slug>',detailCursoView.as_view(),name="detail"),
     path('ajax/',ajaxCharts,name="ajaxGeneral"),
-    path('ajax/',ajaxSTDCharts,name="ajaxSTD")
+    path('ajaxSTD/',ajaxSTDCharts,name="ajaxSTD")
 ]

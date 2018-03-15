@@ -59,6 +59,9 @@
 
      $(document).ready(function() {
          pestanyaGeneral();
+         $("#selectSTD").on('change', function () {
+             pestanyaUsuarios();
+         });
      });
 
      function cambioPestanya(esUsuarios) {
@@ -79,12 +82,13 @@
      }
 
      function pestanyaUsuarios(){
+         var id_std=$("#selectSTD").find("option:selected").val();
             $.ajax({
              type:"GET",
              url:"{% url "cursos:ajaxSTD" %}",
              data: {
                 'id': {{ curso.id }},
-                 'id_std':$("#liSTD option:selected").val()
+                 'id_std':  id_std
              },
              dataType: 'json',
              success:crearGraficos
@@ -110,6 +114,7 @@
         var col = 0;
         var row=0;
         var divContainer = $("#container_charts");
+        divContainer.empty();
         datos.forEach(function (value, index) {
             if(col === 3){
                 col=0;

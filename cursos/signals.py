@@ -10,6 +10,7 @@ from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, Tie
 def creacion_informacion_curso(sender,instance,created, **kwargs):
 
     if created:
+
         dateparse = lambda x: pd.datetime.strptime(x, '%d/%m/%Y %H:%M')
         df = pd.read_csv(instance.documento,parse_dates=['Hora'], date_parser=dateparse, dayfirst=True)
         filter = df.apply(lambda fila: fila.iloc[1] != '-' and "Administrador" not in fila.iloc[1], axis=1)
@@ -17,7 +18,7 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
         n_unicos = df['Nombre completo del usuario'].unique()
 
         for name in n_unicos:
-            alumno = EstudianteCursoMoodle(nombre=name,curso=instance)
+            alumno = EstudianteCursoMoodle(nombre=name.strip(),curso=instance)
             alumno.save()
 
         func = lambda s: s.split(':')[1].strip()
@@ -45,18 +46,32 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                                             contador=fila.count, tipo=TiempoDedicadoCursoMoodle.HORA)
             hora.save()
 
-        std=''
-        id=-1
+        std_name=''
+        aux_std = None
         for fila in pd.DataFrame({'count': df.groupby([pd.Grouper(key='Nombre completo del usuario'),pd.Grouper(key='Hora', freq='D')]).size()}).reset_index().itertuples():
-            if std != fila._1:
-                aux = EstudianteCursoMoodle(nombre=fila._1)
-                std = aux.nombre
-                id = aux.id
+            if std_name != fila._1.strip():
+                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(),curso=instance).first()
+                std_name = aux_std.nombre
+
             dia = TiempoDedicadoEstudianteCursoMoodle(curso=instance, timestamp=pd.to_datetime(fila.Hora, unit='s'),
-                                            contador=fila.count, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD, estudiante_id=id)
+                                            contador=fila.count, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD, estudiante=aux_std)
+            dia.save()
+
+        std_name = ''
+        aux_std = None
+        for fila in pd.DataFrame({'count': df.groupby([pd.Grouper(key='Nombre completo del usuario'), times.hour]).size()}).reset_index().itertuples():
+            if std_name != fila._1.strip():
+                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(), curso=instance).first()
+                std_name = aux_std.nombre
+
+            dia = TiempoDedicadoEstudianteCursoMoodle(curso=instance, timestamp=pd.to_datetime(fila.Hora, unit='h'),
+                                                      contador=fila.count,
+                                                      tipo=TiempoDedicadoEstudianteCursoMoodle.HORA_STD,
+                                                      estudiante=aux_std)
             dia.save()
 
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
+        instance.refresh_from_db()
         
 
     else:
