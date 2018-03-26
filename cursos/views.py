@@ -2,14 +2,14 @@ from random import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
-from django.db.models.functions import ExtractWeek
+
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import generic
 
-from cursos.charts import graficaTiempo
+from cursos.charts import graficaTiempo, graficaTiempoSemanal
 from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle, \
     TiempoDedicadoEstudianteCursoMoodle
 from . import models
@@ -94,15 +94,7 @@ def ajaxCharts(request):
                                                          tipo=TiempoDedicadoCursoMoodle.DIA).aggregate(
             total=Sum('contador'))
         # Grafica semana/#evento
-        chart = {'type': 'line'}
-        labels = []
-        data = []
-        semanas =  TiempoDedicadoCursoMoodle.objects.filter(curso_id=id,tipo=TiempoDedicadoCursoMoodle.DIA).annotate(week=ExtractWeek('timestamp')).values('week').annotate(s=Sum('contador')).values('week', 's').order_by('week')
-        for semana in semanas:
-            labels.append(semana['week'])
-            data.append((semana['s'] / count['total']) * 100)
-        chart['data'] = {'labels': labels, 'datasets': [{'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos'}]}
-        charts.append(chart)
+        charts.append(graficaTiempoSemanal(id))
         # Grafica hora/#evento
         chart = {'type': 'bar'}
         labels = []
