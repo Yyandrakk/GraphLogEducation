@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import generic
 
+from cursos.charts import graficaTiempo
 from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle, \
     TiempoDedicadoEstudianteCursoMoodle
 from . import models
@@ -87,17 +88,11 @@ def ajaxCharts(request):
     id = request.GET.get('id', None)
     if id != None and CursoMoodle.objects.filter(pk=id).exists():
         # Grafica dia/#evento
-        dias = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id,tipo=TiempoDedicadoCursoMoodle.DIA)
-        count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id,tipo=TiempoDedicadoCursoMoodle.DIA).aggregate(total=Sum('contador'))
-        chart = {'type': 'line'}
-        labels = []
-        data = []
-        for dia in dias:
-            labels.append(format(dia.timestamp,"%d/%m/%Y"))
-            data.append((dia.contador/count['total'])*100)
-        chart['data'] = {'labels':labels,'datasets':[{'data':data,'borderColor': "#3e95cd", 'label':'Eventos'}]}
-        charts.append(chart)
 
+        charts.append(graficaTiempo(id))
+        count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id,
+                                                         tipo=TiempoDedicadoCursoMoodle.DIA).aggregate(
+            total=Sum('contador'))
         # Grafica semana/#evento
         chart = {'type': 'line'}
         labels = []
@@ -128,16 +123,6 @@ def ajaxSTDCharts(request):
     id = request.GET.get('id', None)
     id_std = request.GET.get('id_std', None)
     if id != None and id_std != None and EstudianteCursoMoodle.objects.filter(pk=id_std,curso_id=id).exists():
-        dias = TiempoDedicadoEstudianteCursoMoodle.objects.filter(curso_id=id,estudiante_id=id_std, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD)
-        count = TiempoDedicadoEstudianteCursoMoodle.objects.filter(curso_id=id,estudiante_id=id_std, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD).aggregate(
-            total=Sum('contador'))
-        chart = {'type': 'line'}
-        labels = []
-        data = []
-        for dia in dias:
-            labels.append(format(dia.timestamp, "%d/%m/%Y"))
-            data.append((dia.contador / count['total']) * 100)
-        chart['data'] = {'labels': labels, 'datasets': [{'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos'}]}
-        charts.append(chart)
+        charts.append(graficaTiempo(id,id_std))
 
     return JsonResponse(charts, safe=False)
