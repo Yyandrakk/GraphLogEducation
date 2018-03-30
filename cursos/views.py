@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import generic
 
-from cursos.charts import graficaTiempo, graficaTiempoSemanal
+from cursos.charts import graficaTiempo, graficaTiempoSemanal, graficaTiempoHora
 from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle, \
     TiempoDedicadoEstudianteCursoMoodle
 from . import models
@@ -88,25 +88,11 @@ def ajaxCharts(request):
     id = request.GET.get('id', None)
     if id != None and CursoMoodle.objects.filter(pk=id).exists():
         # Grafica dia/#evento
-
         charts.append(graficaTiempo(id))
-        count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id,
-                                                         tipo=TiempoDedicadoCursoMoodle.DIA).aggregate(
-            total=Sum('contador'))
         # Grafica semana/#evento
         charts.append(graficaTiempoSemanal(id))
         # Grafica hora/#evento
-        chart = {'type': 'bar'}
-        labels = []
-        data = []
-        horas = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id, tipo=TiempoDedicadoCursoMoodle.HORA)
-        count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id, tipo=TiempoDedicadoCursoMoodle.HORA).aggregate(total=Sum('contador'))
-        for hora in horas:
-            labels.append(format(hora.timestamp,"%H"))
-            data.append((hora.contador/count['total'])*100)
-
-        chart['data'] = {'labels':labels,'datasets':[{'data':data,'backgroundColor': ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#C4A73D","#7EC44A","#C44148","#C4249F", "#110EC4","#AF19FF","#18FFDD","#FFD558","#3e96cd", "#5e5ea2","#3c3a9f","#e823b9","#c45810","#CAA73D","#7E444A","#C43148","#C4219F", "#113EC4","#AF29FF","#18FFAD"], 'label':'Eventos'}]}
-        charts.append(chart)
+        charts.append(graficaTiempoHora(id))
 
     return JsonResponse(charts,safe=False)
 
@@ -116,5 +102,7 @@ def ajaxSTDCharts(request):
     id_std = request.GET.get('id_std', None)
     if id != None and id_std != None and EstudianteCursoMoodle.objects.filter(pk=id_std,curso_id=id).exists():
         charts.append(graficaTiempo(id,id_std))
+        charts.append(graficaTiempoSemanal(id,id_std))
+        charts.append(graficaTiempoHora(id,id_std))
 
     return JsonResponse(charts, safe=False)
