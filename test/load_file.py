@@ -5,6 +5,8 @@ def load(path):
     df = pd.read_csv(path,parse_dates=['Hora'], date_parser=dateparse, dayfirst=True)
     filter=df.apply(lambda fila: fila.iloc[1] != '-' and "Administrador" not in fila.iloc[1],axis=1)
     df=df[filter]
+
+    # print(list(df['Contexto del evento'].unique()))
     #print(df)
     #n_unicos = list(df['Nombre completo del usuario'].unique()))
     # print (df['Nombre completo del usuario'].unique())
@@ -27,7 +29,7 @@ def load(path):
         #print(pd.to_datetime(fila.Hora, unit='h'))
     #print(pd.DataFrame({'count': df.groupby([pd.Grouper(key='Nombre completo del usuario'),pd.Grouper(key='Hora', freq='D')]).size()}).reset_index())
     #print( df.sort_values(by=['Nombre completo del usuario', 'Hora']))
-    std_name = ''
+    '''std_name = ''
     time_invertido = 0
     fecha_anterior = None
     umbral_sec= 5*60
@@ -40,6 +42,12 @@ def load(path):
         if fecha_anterior != None and (fecha - fecha_anterior).seconds <umbral_sec:
             time_invertido += (fecha - fecha_anterior).seconds
         fecha_anterior=fecha
+        '''
+
+    for fila in df.loc[df['Nombre evento'].isin(['Ha comenzado el intento','Intento enviado'])].sort_values(by=['Nombre completo del usuario','Hora']).itertuples():
+        print('Name: {0}, Fecha: {1}, Contexto: {2}, Nombre evento: {3}'.format(fila._2,fila.Hora, fila._4,fila._6))
+
+
 
 
 

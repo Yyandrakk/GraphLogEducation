@@ -89,6 +89,26 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                 time_invertido += (fecha - fecha_anterior).seconds
             fecha_anterior = fecha
 
+        std_name = ''
+        fecha_anterior = None
+        aux_contexto = None
+        for fila in df.loc[df['Nombre evento'].isin(['Ha comenzado el intento', 'Intento enviado'])].sort_values(by=['Nombre completo del usuario', 'Hora']).itertuples():
+            if std_name != fila._2.strip():
+                if std_name != '':
+                    t = TiempoInvertidoEnCursoMoodle(curso=instance, estudiante=aux_std, seconds=(pd.to_datetime(fila.Hora, unit='s') - fecha_anterior).seconds, contexto=aux_contexto)
+                    t.save()
+                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(), curso=instance).first()
+                std_name = aux_std.nombre
+
+            if fila._6 == 'Ha comenzado el intento':
+                aux_contexto = MaterialCursoMoodle.objects.filter(nombre=fila._4.split(':')[1].strip(), curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO).first()
+                fecha_anterior = pd.to_datetime(fila.Hora, unit='s')
+            else:
+                t = TiempoInvertidoEnCursoMoodle(curso=instance, estudiante=aux_std, seconds=(pd.to_datetime(fila.Hora, unit='s') - fecha_anterior).seconds,
+                                                 contexto=aux_contexto)
+                t.save()
+
+
 
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
         instance.refresh_from_db()
