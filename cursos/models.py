@@ -64,3 +64,9 @@ class TiempoDedicadoEstudianteCursoMoodle(models.Model):
 
     class Meta:
         unique_together = ["curso", "timestamp", "tipo", "estudiante"]
+
+class TiempoInvertidoEnCursoMoodle(models.Model):
+    curso = models.ForeignKey(CursoMoodle, on_delete=models.CASCADE)
+    estudiante = models.ForeignKey(EstudianteCursoMoodle, on_delete=models.CASCADE, db_constraint=False, blank=True,
+                                   null=True)
+    seconds = models.IntegerField(null=False, blank=False)

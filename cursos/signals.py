@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, TiempoDedicadoCursoMoodle, \
-    TiempoDedicadoEstudianteCursoMoodle
+    TiempoDedicadoEstudianteCursoMoodle, TiemporInvertidoEnCursoMoodle, TiempoInvertidoEnCursoMoodle
 
 
 @receiver(post_save, sender=CursoMoodle)
@@ -59,6 +59,7 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
 
         std_name = ''
         aux_std = None
+
         for fila in pd.DataFrame({'count': df.groupby([pd.Grouper(key='Nombre completo del usuario'), times.hour]).size()}).reset_index().itertuples():
             if std_name != fila._1.strip():
                 aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(), curso=instance).first()
@@ -68,7 +69,26 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                                                       contador=fila.count,
                                                       tipo=TiempoDedicadoEstudianteCursoMoodle.HORA_STD,
                                                       estudiante=aux_std)
+
             dia.save()
+
+        std_name = ''
+        time_invertido = 0
+        fecha_anterior = None
+        umbral_sec = instance.umbral * 60
+        for fila in df.sort_values(by=['Nombre completo del usuario', 'Hora']).itertuples():
+            if std_name != fila._2.strip():
+                if std_name != '':
+                   t = TiempoInvertidoEnCursoMoodle(curso=instance,estudiante=aux_std,seconds=time_invertido)
+                   t.save()
+                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(), curso=instance).first()
+                std_name = aux_std.nombre
+                time_invertido = 0
+            fecha = pd.to_datetime(fila.Hora, unit='s')
+            if fecha_anterior != None and (fecha - fecha_anterior).seconds < umbral_sec:
+                time_invertido += (fecha - fecha_anterior).seconds
+            fecha_anterior = fecha
+
 
         CursoMoodle.objects.filter(id=instance.id).update(procesado=True)
         instance.refresh_from_db()
