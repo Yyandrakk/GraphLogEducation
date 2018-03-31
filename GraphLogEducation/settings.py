@@ -153,7 +153,7 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 
 LOGIN_URL = 'user:login'
 
-LOGIN_REDIRECT_URL = 'graph:index'
+LOGIN_REDIRECT_URL = 'cursos:todos'
 
 LOGOUT_REDIRECT_URL = LOGIN_URL
 
