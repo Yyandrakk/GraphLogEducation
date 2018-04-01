@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, TiempoDedicadoCursoMoodle, \
-    TiempoDedicadoEstudianteCursoMoodle, TiemporInvertidoEnCursoMoodle, TiempoInvertidoEnCursoMoodle
+    TiempoDedicadoEstudianteCursoMoodle, TiempoInvertidoEnCursoMoodle
 
 
 @receiver(post_save, sender=CursoMoodle)
@@ -81,7 +81,7 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
                 if std_name != '':
                    t = TiempoInvertidoEnCursoMoodle(curso=instance,estudiante=aux_std,seconds=time_invertido)
                    t.save()
-                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(), curso=instance).first()
+                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._2.strip(), curso=instance).first()
                 std_name = aux_std.nombre
                 time_invertido = 0
             fecha = pd.to_datetime(fila.Hora, unit='s')
@@ -92,19 +92,21 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
         std_name = ''
         fecha_anterior = None
         aux_contexto = None
-        for fila in df.loc[df['Nombre evento'].isin(['Ha comenzado el intento', 'Intento enviado'])].sort_values(by=['Nombre completo del usuario', 'Hora']).itertuples():
+        for fila in df.loc[df['Nombre evento'].isin(['Ha comenzado el intento', 'Intento enviado'])].sort_values(by=['Nombre completo del usuario','Contexto del evento','Hora']).itertuples():
             if std_name != fila._2.strip():
-                if std_name != '':
-                    t = TiempoInvertidoEnCursoMoodle(curso=instance, estudiante=aux_std, seconds=(pd.to_datetime(fila.Hora, unit='s') - fecha_anterior).seconds, contexto=aux_contexto)
-                    t.save()
-                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._1.strip(), curso=instance).first()
+                aux_std = EstudianteCursoMoodle.objects.filter(nombre=fila._2.strip(), curso=instance).first()
                 std_name = aux_std.nombre
-
+                aux_contexto = None
+            fecha = pd.to_datetime(fila.Hora, unit='s')
             if fila._6 == 'Ha comenzado el intento':
-                aux_contexto = MaterialCursoMoodle.objects.filter(nombre=fila._4.split(':')[1].strip(), curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO).first()
-                fecha_anterior = pd.to_datetime(fila.Hora, unit='s')
-            else:
-                t = TiempoInvertidoEnCursoMoodle(curso=instance, estudiante=aux_std, seconds=(pd.to_datetime(fila.Hora, unit='s') - fecha_anterior).seconds,
+                try:
+                    aux_contexto = MaterialCursoMoodle.objects.filter(nombre=fila._4.split(':')[1].strip(), curso=instance, tipo=MaterialCursoMoodle.CUESTIONARIO).first()
+                    fecha_anterior = fecha
+                except IndexError:
+                    print("el valor de fila._4 es {0}".format(fila._4))
+                    aux_contexto = None
+            elif aux_contexto!=None and (fecha - fecha_anterior).seconds > 0:
+                t = TiempoInvertidoEnCursoMoodle(curso=instance, estudiante=aux_std, seconds=(fecha - fecha_anterior).seconds,
                                                  contexto=aux_contexto)
                 t.save()
 

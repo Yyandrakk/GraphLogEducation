@@ -105,5 +105,14 @@ def graficaTiempoHora(id_curso, id_std=None):
     return chart
 
 
+def graficaTiempoMedioContexto(id_curso):
+
+    chart = {'type': 'bar'}
+    labels = []
+    data = []
+    dataset = []
+
+
+
 
 

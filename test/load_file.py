@@ -44,7 +44,7 @@ def load(path):
         fecha_anterior=fecha
         '''
 
-    for fila in df.loc[df['Nombre evento'].isin(['Ha comenzado el intento','Intento enviado'])].sort_values(by=['Nombre completo del usuario','Hora']).itertuples():
+    for fila in df.loc[(df['Nombre completo del usuario'] == "Maria Muñoz Sanz") & df['Nombre evento'].isin(['Ha comenzado el intento','Intento enviado'])].sort_values(by=['Nombre completo del usuario','Contexto del evento','Hora']).itertuples():
         print('Name: {0}, Fecha: {1}, Contexto: {2}, Nombre evento: {3}'.format(fila._2,fila.Hora, fila._4,fila._6))
 
 
@@ -55,4 +55,4 @@ def load(path):
 
 
 if __name__ == '__main__':
-    load("../media/user_1/logs_2017_18464_311_20171211-1635.csv")
+    load("../media/user_1/curso_Prueba/logs_2017_18464_311_20171211-1635.csv")
