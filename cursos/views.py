@@ -1,19 +1,20 @@
 from random import random
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
+
+from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
+from django.views import generic
 
-
-from cursos.models import CursoMoodle
+from cursos.charts import graficaTiempo, graficaTiempoSemanal, graficaTiempoHora, graficaTiempoMedioContexto
+from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle, \
+    TiempoDedicadoEstudianteCursoMoodle
 from . import models
 from .forms import FormCursoMoodle
-from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-from django.views import generic
-# Create your views here.
 
 class indexCursoView(LoginRequiredMixin,generic.ListView):
     template_name = "cursos/listCursos.html"
@@ -23,13 +24,7 @@ class indexCursoView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return self.models.objects.filter(profesor_id=self.request.user.id)
 
-
-
 def unique_slug_generator(slug):
-    """
-    This is for a Django project and it assumes your instance
-    has a model with a slug field and a title character (char) field.
-    """
 
     if CursoMoodle.objects.filter(slug=slug).exists():
         new_slug = "{slug}-{rand}".format(
@@ -62,6 +57,11 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
     model = models.CursoMoodle
     context_object_name = 'curso'
 
+    def get_context_data(self, **kwargs):
+        context = super(detailCursoView,self).get_context_data()
+        context['estudiantes'] = EstudianteCursoMoodle.objects.filter(curso__id=context['curso'].id).order_by('nombre')
+        return context
+
     def user_test(self,request,slug):
         return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()
 
@@ -71,3 +71,40 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
             return redirect("cursos:todos")
         return super().dispatch(
             request, *args, **kwargs)
+
+
+def createChart(type,labels,data,tittle,label):
+    '''
+    :param type: Tipo de grafico
+    :param labels: Etiquetas del eje x
+    :param data: Datos del eje y
+    :param tittle: Titulo del grafico
+    :param label: Leyenda
+    :return:
+    '''
+
+def ajaxCharts(request):
+    charts=[]
+    id = request.GET.get('id', None)
+    if id != None and CursoMoodle.objects.filter(pk=id).exists():
+        # Grafica dia/#evento
+        charts.append(graficaTiempo(id))
+        # Grafica semana/#evento
+        charts.append(graficaTiempoSemanal(id))
+        # Grafica hora/#evento
+        charts.append(graficaTiempoHora(id))
+        # Grafica media contextos
+        charts.append(graficaTiempoMedioContexto(id))
+    return JsonResponse(charts,safe=False)
+
+def ajaxSTDCharts(request):
+    charts = []
+    id = request.GET.get('id', None)
+    id_std = request.GET.get('id_std', None)
+    if id != None and id_std != None and EstudianteCursoMoodle.objects.filter(pk=id_std,curso_id=id).exists():
+        charts.append(graficaTiempo(id,id_std))
+        charts.append(graficaTiempoSemanal(id,id_std))
+        charts.append(graficaTiempoHora(id,id_std))
+        charts.append(graficaTiempoMedioContexto(id,id_std))
+
+    return JsonResponse(charts, safe=False)

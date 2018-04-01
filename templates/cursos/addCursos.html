@@ -3,7 +3,7 @@
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-  <a class="navbar-brand" href="{% url "graph:index" %}">GraphLog Education</a>
+  <a class="navbar-brand" href="{% url "cursos:todos" %}">GraphLog Education</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -15,9 +15,6 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url "cursos:add" %}">Añadir curso</a>
       </li>
     </ul>
   </div>
@@ -77,7 +74,7 @@
                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-file-excel fa-fw"></i></span></div>
                      <div class="custom-file">
                          {{ form.documento }}
-                         <label class="custom-file-label" for="{{ form.documento.id }}"> {{ form.documento.label }}</label>
+                         <label class="custom-file-label" for="{{ form.documento.auto_id }}"> {{ form.documento.label }}</label>
                          
                      </div>
                  </div>
@@ -86,4 +83,13 @@
             <input type="submit" class="btn btn-primary" value="Enviar">
         </form>
     </div>
+    <script type="text/javascript">
+        var id ="{{ form.documento.auto_id }}";
+        $('#'+id).on('change',function(){
+            //get the file name
+            var fileName = $(this).val().split('\\').pop();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
 {% endblock %}

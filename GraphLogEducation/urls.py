@@ -16,13 +16,16 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, reverse_lazy
+from django.views.generic import RedirectView
+
+from cursos.views import indexCursoView
 
 urlpatterns = [
-    path('', include('GraphLog.urls', namespace="graph")),
     path('user/',include('usuarios.urls', namespace="user")),
     path('cursos/', include('cursos.urls', namespace="cursos")),
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url=reverse_lazy('cursos:todos'), permanent=False), name='index'),
 ]
 
 if settings.DEBUG:

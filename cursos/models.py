@@ -29,6 +29,7 @@ class EstudianteCursoMoodle(models.Model):
     curso = models.ForeignKey(CursoMoodle,on_delete = models.CASCADE)
     nombre = models.CharField(max_length=100,null=False,blank=False)
 
+
 class MaterialCursoMoodle(models.Model):
     ARCHIVO = 'AR'
     CUESTIONARIO = 'CU'
@@ -39,3 +40,37 @@ class MaterialCursoMoodle(models.Model):
 
     class Meta:
         unique_together = ["curso", "nombre","tipo"]
+
+
+class TiempoDedicadoCursoMoodle(models.Model):
+    DIA = 'DI'
+    HORA = 'HO'
+    TYPES = ((DIA,"Dia"), (HORA, "Hora"))
+    curso = models.ForeignKey(CursoMoodle, on_delete=models.CASCADE)
+    contador = models.IntegerField(null=False,blank=False)
+    tipo = models.CharField(max_length=2, choices=TYPES, null=False)
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        unique_together = ["curso", "timestamp","tipo"]
+
+
+class TiempoDedicadoEstudianteCursoMoodle(models.Model):
+    DIA_STD = "DS"
+    HORA_STD = "HS"
+    TYPES_STD = ((DIA_STD,"Dia estudiante"),(HORA_STD,"Hora estudiante"))
+    curso = models.ForeignKey(CursoMoodle, on_delete=models.CASCADE)
+    contador = models.IntegerField(null=False,blank=False)
+    tipo = models.CharField(max_length=2, choices=TYPES_STD, null=False)
+    timestamp = models.DateTimeField()
+    estudiante = models.ForeignKey(EstudianteCursoMoodle,on_delete=models.CASCADE,db_constraint=False,blank = True,null=True)
+
+    class Meta:
+        unique_together = ["curso", "timestamp", "tipo", "estudiante"]
+
+
+class TiempoInvertidoEnCursoMoodle(models.Model):
+    curso = models.ForeignKey(CursoMoodle, on_delete=models.CASCADE)
+    estudiante = models.ForeignKey(EstudianteCursoMoodle, on_delete=models.CASCADE, db_constraint=False, blank=False, null=False)
+    seconds = models.IntegerField(null=False, blank=False)
+    contexto = models.ForeignKey(MaterialCursoMoodle, on_delete=models.CASCADE, db_constraint=False, blank=True, null=True)
