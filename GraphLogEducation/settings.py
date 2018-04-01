@@ -26,7 +26,7 @@ MEDIA_DIR = os.path.join(BASE_DIR,'media')
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_random_secret_key()
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,7 +83,6 @@ WSGI_APPLICATION = 'GraphLogEducation.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-#export DATABASE_URL = 'postgres://alumnodb.alumnodb@localhost:5432/test'
 
 DATABASES = {}
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -156,4 +155,4 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 
 import django_heroku
-django_heroku.settings(locals(),secret_key=False,logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
+django_heroku.settings(locals(),logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
