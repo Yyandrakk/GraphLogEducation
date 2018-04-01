@@ -74,7 +74,7 @@
                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-file-excel fa-fw"></i></span></div>
                      <div class="custom-file">
                          {{ form.documento }}
-                         <label class="custom-file-label" for="{{ form.documento.id }}"> {{ form.documento.label }}</label>
+                         <label class="custom-file-label" for="{{ form.documento.auto_id }}"> {{ form.documento.label }}</label>
                          
                      </div>
                  </div>
@@ -83,4 +83,13 @@
             <input type="submit" class="btn btn-primary" value="Enviar">
         </form>
     </div>
+    <script type="text/javascript">
+        var id ="{{ form.documento.auto_id }}";
+        $('#'+id).on('change',function(){
+            //get the file name
+            var fileName = $(this).val().split('\\').pop();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
 {% endblock %}
