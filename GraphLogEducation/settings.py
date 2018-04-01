@@ -156,4 +156,4 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 
 import django_heroku
-django_heroku.settings(locals())
+django_heroku.settings(locals(),secret_key=False,logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
