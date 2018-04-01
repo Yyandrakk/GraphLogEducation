@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import dj_database_url
+from django.core.management.utils import get_random_secret_key
 
 import local_settings
 
@@ -25,12 +27,12 @@ MEDIA_DIR = os.path.join(BASE_DIR,'media')
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm7w1os7y*c@11@v*dh+epv#0(*a#0f0w8r!%)ss-%y57w*$dfc'
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,16 +86,9 @@ WSGI_APPLICATION = 'GraphLogEducation.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test',
-        'USER': local_settings.DB_USER,
-        'PASSWORD': local_settings.DB_PASS,
-        'HOST': 'localhost',
-        'PORT': '',   
-    }
+    'default': dj_database_url.config()
 }
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -137,15 +132,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
 
+
+
+
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-
-MEDIA_ROOT = MEDIA_DIR
+MEDIA_ROOT = 'media'
 MEDIA_URL = '/media/'
 
 
