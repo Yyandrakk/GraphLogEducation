@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from django.db.models import Sum
-from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle
+from django.db.models import Sum, Avg
+from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle, TiempoInvertidoEnCursoMoodle
 from django.db.models.functions import ExtractWeek, ExtractYear
 
 
@@ -99,20 +99,40 @@ def graficaTiempoHora(id_curso, id_std=None):
                                                      "#FFD558", "#3e96cd", "#5e5ea2", "#3c3a9f",
                                                      "#e823b9", "#c45810", "#CAA73D", "#7E444A",
                                                      "#C43148", "#C4219F", "#113EC4", "#AF29FF",
-                                                     "#18FFAD"], 'label': 'Eventos'})
+                                                     "#18FFAD"], 'label': '%Eventos'})
 
     chart['data'] = {'labels': labels, 'datasets': dataset}
     return chart
 
 
-def graficaTiempoMedioContexto(id_curso):
+def graficaTiempoMedioContexto(id_curso,id_std=None):
 
     chart = {'type': 'bar'}
     labels = []
     data = []
     dataset = []
 
+    if id_std!=None:
+        for cuestionario in TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso,estudiante_id=id_std).exclude(
+                contexto__isnull=True).values('contexto__nombre').annotate(media=Sum('seconds')).order_by( 'contexto__nombre'):
+            labels.append(cuestionario['contexto__nombre'])
+            data.append(cuestionario['media'] / 60)
 
+        cuestionario = TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso, estudiante_id=id_std, contexto__isnull=True).first()
+        labels.append("Tiempo en la plataforma")
+        data.append(cuestionario.seconds / 60)
+        dataset.append({'data': data, 'label': 'Minutos', 'backgroundColor': "#3e95cd"})
+        chart['data'] = {'labels': labels, 'datasets': dataset}
+        chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]}}
+    else:
+        for cuestionario in TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso).exclude(contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by('contexto__nombre'):
+            labels.append(cuestionario['contexto__nombre'])
+            data.append(cuestionario['media']/60)
+
+        dataset.append({'data': data, 'label': 'Minutos','backgroundColor':"#3e95cd"})
+        chart['data'] = {'labels': labels, 'datasets': dataset}
+        chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]}}
+    return chart
 
 
 
