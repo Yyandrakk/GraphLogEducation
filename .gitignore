@@ -108,3 +108,6 @@ venv.bak/
 .idea/
 GraphLogEducation/__pycache__/
 
+*.pyc
+staticfiles
+uploads

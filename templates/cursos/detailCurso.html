@@ -1,0 +1,133 @@
+{% load staticfiles %}
+{% include  "Base/base.html" with tittle=curso.nombre%}
+{% block jsLoad %}<script src="{% static 'js/Chart.bundle.min.js' %}"></script>{% endblock %}
+{% block navBarTop %}
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <a class="navbar-brand" href="{% url "cursos:todos" %}">GraphLog Education</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarDespegableTop">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% endblock %}
+
+{% block contenido %}
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col"><h1 class="h1 align-content-center">{{ curso.nombre }}</h1></div>
+            <div class="col">
+                <nav aria-label="Paginado tipo de grafica">
+                    <ul class="pagination">
+                        <li id="liGeneral" class="page-item active">
+                            <a class="page-link" href="javascript: cambioPestanya(false);">General</a>
+                        </li>
+                        <li id="liSTD" class="page-item"><a class="page-link" href="javascript: cambioPestanya(true);">Estudiantes</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="divSelect" class="col invisible">
+                <select class="custom-select" id="selectSTD">
+                {% for estudiante in estudiantes %}
+                    <option value="{{estudiante.id}}">{{estudiante.nombre}}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+                
+
+        <div id="container_charts" class="container-fluid">
+        </div>
+    </div>
+    </div>
+
+<script>
+
+     $(document).ready(function() {
+         pestanyaGeneral();
+         $("#selectSTD").on('change', function () {
+             pestanyaUsuarios();
+         });
+     });
+
+     function cambioPestanya(esUsuarios) {
+        var divSel= $("#divSelect");
+
+        if(esUsuarios){
+            divSel.attr('class', 'col visible');
+            $("#liGeneral").attr('class','page-item');
+            $("#liSTD").attr('class','page-item active');
+            pestanyaUsuarios();
+        }else{
+           divSel.attr('class', 'col invisible');
+           $("#liGeneral").attr('class','page-item active');
+           $("#liSTD").attr('class','page-item');
+           pestanyaGeneral();
+        }
+
+     }
+
+     function pestanyaUsuarios(){
+         var id_std=$("#selectSTD").find("option:selected").val();
+            $.ajax({
+             type:"GET",
+             url:"{% url "cursos:ajaxSTD" %}",
+             data: {
+                'id': {{ curso.id }},
+                 'id_std':  id_std
+             },
+             dataType: 'json',
+             success:crearGraficos
+         });
+
+     }
+
+     function pestanyaGeneral(){
+        $.ajax({
+             type:"GET",
+             url:"{% url "cursos:ajaxGeneral" %}",
+             data: {
+                'id': {{ curso.id }}
+             },
+             dataType: 'json',
+             success:crearGraficos
+         });
+
+     }
+
+
+    function crearGraficos(datos,status,xhr) {
+        var col = 0;
+        var row=0;
+        var divContainer = $("#container_charts");
+        divContainer.empty();
+        datos.forEach(function (value, index) {
+            if(col === 1){
+                col=0;
+                row++;
+            }
+            if(col === 0){
+                divContainer.append("<div id=\"row"+row+"\" class=\"row\">");
+            }
+            $("#row"+row).append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
+            new Chart($("#chart-"+index), value);
+            col++
+        });
+
+    }
+</script>
+{% endblock %}

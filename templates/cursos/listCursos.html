@@ -1,0 +1,55 @@
+{% include  "Base/base.html" with tittle="Cursos"%}
+{% block navBarTop %}
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <a class="navbar-brand" href="{% url "cursos:todos" %}">GraphLog Education</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarDespegableTop">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% endblock %}
+{% block contenido %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-sm-2">
+             <a class="btn btn-primary" href="{% url "cursos:add" %}">Añadir curso</a>
+        </div>
+        <div class="row">
+            <div class="card-columns">
+                {% for curso in curso_list %}
+                   <div class="card bg-light">
+                        <div class="card-header">
+                            {% if curso.procesado %}
+                                <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
+                            {% else %}
+                                <a class="card-link disabled">{{ curso.nombre }}</a>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ curso.desc }}</p>
+                            <p class="card-text"><small class="text-muted">Umbral: {{ curso.umbral }}</small></p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Ultima actualizacion {{ curso.actualizado }}</small>
+                        </div>
+                   </div>
+                {% empty %}
+                   <h2 class="display-3">No dispone de ningun curso</h2>
+                {% endfor %}
+            </div>
+    </div>
+    </div>
+</section>
+{% endblock %}
