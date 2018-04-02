@@ -111,3 +111,4 @@ GraphLogEducation/__pycache__/
 *.pyc
 staticfiles
 uploads
+/database_export.py
