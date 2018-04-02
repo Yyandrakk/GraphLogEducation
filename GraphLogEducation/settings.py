@@ -16,6 +16,8 @@ from django.core.management.utils import get_random_secret_key
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 STATIC_DIR = os.path.join(BASE_DIR,'static')
@@ -154,5 +156,15 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 
-import django_heroku
-django_heroku.settings(locals(),logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
+import local_settings
+DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
+    'NAME': 'test',
+    'USER': local_settings.DB_USER,
+    'PASSWORD': local_settings.DB_PASS,
+    'HOST': 'localhost',
+    'PORT': '',
+}
+SECRET_KEY=local_settings.key
+
+#import django_heroku
+#django_heroku.settings(locals(),logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
