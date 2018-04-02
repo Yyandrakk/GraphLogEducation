@@ -155,7 +155,7 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
-
+'''
 import local_settings
 DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
     'NAME': 'test',
@@ -165,6 +165,6 @@ DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
     'PORT': '',
 }
 SECRET_KEY=local_settings.key
-
-#import django_heroku
-#django_heroku.settings(locals(),logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
+'''
+import django_heroku
+django_heroku.settings(locals(),logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
