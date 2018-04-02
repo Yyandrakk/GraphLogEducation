@@ -131,8 +131,8 @@ class ProcesarFicheroThread(threading.Thread):
 def creacion_informacion_curso(sender,instance,created, **kwargs):
 
     if created:
-        ProcesarFicheroThread(instance).start()
-
+        #ProcesarFicheroThread(instance).start()
+        pass
     else:
         if "documento" is kwargs.get("update_fields",False):
             print("documento")
