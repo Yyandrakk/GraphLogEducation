@@ -112,3 +112,5 @@ GraphLogEducation/__pycache__/
 staticfiles
 uploads
 /database_export.py
+
+/media/
