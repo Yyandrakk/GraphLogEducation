@@ -114,3 +114,4 @@ uploads
 /database_export.py
 
 /media/
+/secret_key_generator.py
