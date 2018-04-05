@@ -140,7 +140,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = 'media'
-MEDIA_URL = '/media/'
+MEDIA_URL = os.environ.get('URL_F')
 
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
