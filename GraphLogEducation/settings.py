@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-import dj_database_url
-from django.core.management.utils import get_random_secret_key
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 
@@ -46,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'GraphLog.apps.GraphlogConfig',
+    'storages',
     'usuarios',
     'cursos'
     ,
@@ -164,4 +162,12 @@ DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
 }
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
+AZURE_ACCOUNT_NAME = os.environ.get('USER_F')
+
+AZURE_ACCOUNT_KEY = os.environ.get('KEY_F')
+
+AZURE_CONTAINER = os.environ.get('CONT_F')
 
