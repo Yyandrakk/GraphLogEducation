@@ -1,6 +1,11 @@
 {% load staticfiles %}
 {% include  "Base/base.html" with tittle=curso.nombre%}
-{% block jsLoad %}<script src="{% static 'js/Chart.bundle.min.js' %}"></script>{% endblock %}
+{% block jsLoad %}
+    <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}" />
+    <script src="{% static 'js/select2.full.min.js' %}"></script>
+
+{% endblock %}
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -39,7 +44,7 @@
                 </nav>
             </div>
             <div id="divSelect" class="col invisible">
-                <select class="custom-select" id="selectSTD">
+                <select class="js-example-basic-single" id="selectSTD">
                 {% for estudiante in estudiantes %}
                     <option value="{{estudiante.id}}">{{estudiante.nombre}}</option>
                 {% endfor %}
@@ -49,8 +54,18 @@
 
 
                 
-
-        <div id="container_charts" class="container-fluid">
+        <div id="carousel_charts" class="carousel slide border border-primary" data-ride="carousel">
+            <ol id="olIndicator" class="carousel-indicators">
+            </ol>
+            <div id="container_charts" class="carousel-inner"></div>
+            <a class="btn-floating carousel-control-prev" href="#carousel_charts" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="btn-floating carousel-control-next" href="#carousel_charts" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
     </div>
     </div>
@@ -62,6 +77,8 @@
          $("#selectSTD").on('change', function () {
              pestanyaUsuarios();
          });
+
+          $('.js-example-basic-single').select2();
      });
 
      function cambioPestanya(esUsuarios) {
@@ -111,22 +128,26 @@
 
 
     function crearGraficos(datos,status,xhr) {
-        var col = 0;
-        var row=0;
+
         var divContainer = $("#container_charts");
+        var olIndicators = $("#olIndicator");
         divContainer.empty();
+        olIndicators.empty();
         datos.forEach(function (value, index) {
-            if(col === 1){
-                col=0;
-                row++;
+
+            if(index===0){
+                olIndicators.append("<li data-target=\"#carousel_charts\" data-slide-to=\""+index+"\" class=\"active\"></li>");
+                divContainer.append("<div class=\"carousel-item active\"><canvas class=\"d-block w-100\" id=\"chart-"+index+"\" ></canvas></div>");
             }
-            if(col === 0){
-                divContainer.append("<div id=\"row"+row+"\" class=\"row\">");
+            else{
+                olIndicators.append("<li data-target=\"#carousel_charts\" data-slide-to=\""+index+"\"></li>");
+                divContainer.append("<div class=\"carousel-item\"><canvas class=\"d-block w-100\" id=\"chart-"+index+"\" ></canvas></div>");
             }
-            $("#row"+row).append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
             new Chart($("#chart-"+index), value);
-            col++
+
         });
+
+        $('.carousel').carousel();
 
     }
 </script>
