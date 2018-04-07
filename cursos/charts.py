@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from django.db.models import Sum, Avg
-from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle, TiempoInvertidoEnCursoMoodle
 from django.db.models.functions import ExtractWeek, ExtractYear
+
+from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle, TiempoInvertidoEnCursoMoodle
 
 
 def graficaTiempo(id_curso, id_std=None):
@@ -26,7 +27,13 @@ def graficaTiempo(id_curso, id_std=None):
 
     dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos general'})
     chart['data'] = {'datasets': dataset}
-    chart['options'] = {'scales': {'xAxes':[{'type':'time','time':{'unit':'day','round':'day','parser':'D/M/YYY'} }]}}
+    chart['options'] = {'scales': {'xAxes':[{'type':'time','time':{'unit':'day','round':'day','parser':'D/M/YYY'} }]},
+                        'title': {
+                            'display': 'true',
+                            'text': 'Eventos en cada dia',
+                            'fontSize': 16
+                        }
+                        }
 
     return chart
 
@@ -57,7 +64,13 @@ def graficaTiempoSemanal(id_curso, id_std=None):
     dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos general'})
     chart['data'] = {'datasets': dataset}
 
-    chart['options'] = {'scales': {'xAxes': [{'type': 'time', 'time': {'unit': 'day', 'round': 'day', 'parser': 'D/M/YYY'}}]}}
+    chart['options'] = {'scales': {'xAxes': [{'type': 'time', 'time': {'unit': 'day', 'round': 'day', 'parser': 'D/M/YYY'}}]},
+                        'title': {
+                            'display': 'true',
+                            'text': 'Eventos en cada semana',
+                            'fontSize':16
+                        }
+                        }
 
     return chart
 
@@ -102,6 +115,12 @@ def graficaTiempoHora(id_curso, id_std=None):
                                                      "#18FFAD"], 'label': '%Eventos'})
 
     chart['data'] = {'labels': labels, 'datasets': dataset}
+    chart['options'] = {'title': {
+                            'display': 'true',
+                            'text': 'Eventos en cada hora',
+                            'fontSize': 16
+                            }
+                        }
     return chart
 
 
@@ -122,16 +141,21 @@ def graficaTiempoMedioContexto(id_curso,id_std=None):
         labels.append("Tiempo en la plataforma")
         data.append(cuestionario.seconds / 60)
         dataset.append({'data': data, 'label': 'Minutos', 'backgroundColor': "#3e95cd"})
-        chart['data'] = {'labels': labels, 'datasets': dataset}
-        chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]}}
     else:
         for cuestionario in TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso).exclude(contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by('contexto__nombre'):
             labels.append(cuestionario['contexto__nombre'])
             data.append(cuestionario['media']/60)
 
         dataset.append({'data': data, 'label': 'Minutos','backgroundColor':"#3e95cd"})
-        chart['data'] = {'labels': labels, 'datasets': dataset}
-        chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]}}
+
+    chart['data'] = {'labels': labels, 'datasets': dataset}
+    chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]},
+                        'title': {
+                            'display': 'true',
+                            'text': 'Tiempo medio en cada contexto',
+                            'fontSize': 16
+                        }
+                        }
     return chart
 
 

@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-
+from GraphLogEducation.local_settings import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'GraphLog.apps.GraphlogConfig',
-    'storages',
     'usuarios',
     'cursos'
     ,
@@ -140,7 +139,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = 'media'
-MEDIA_URL = os.environ.get('URL_F')
+MEDIA_URL = '/media/'
 
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
@@ -153,6 +152,17 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
+from GraphLogEducation.local_settings import *
+DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
+    'NAME': 'test',
+    'USER': DB_USER,
+    'PASSWORD': DB_PASS,
+    'HOST': 'localhost',
+    'PORT': '',
+}
+SECRET_KEY = key
+
+'''
 DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
     'NAME': os.environ.get('DB_DB'),
     'USER': os.environ.get('DB_U'),
@@ -160,6 +170,7 @@ DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
     'HOST': os.environ.get('DB_H'),
     'PORT': '5432',
 }
+
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -170,4 +181,6 @@ AZURE_ACCOUNT_NAME = os.environ.get('USER_F')
 AZURE_ACCOUNT_KEY = os.environ.get('KEY_F')
 
 AZURE_CONTAINER = os.environ.get('CONT_F')
+
+'''
 
