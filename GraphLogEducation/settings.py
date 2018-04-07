@@ -11,9 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import dj_database_url
-from django.core.management.utils import get_random_secret_key
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -33,7 +30,7 @@ SECRET_KEY = ''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['graphlogeducation.herokuapp.com','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['graphlogeducation.azurewebsites.net','graphlogeducation.herokuapp.com','127.0.0.1','localhost']
 
 
 # Application definition
@@ -46,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'GraphLog.apps.GraphlogConfig',
+    'storages',
     'usuarios',
     'cursos'
     ,
@@ -142,7 +140,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = 'media'
-MEDIA_URL = '/media/'
+MEDIA_URL = os.environ.get('URL_F')
 
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
@@ -155,16 +153,21 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
-'''
-import local_settings
 DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
-    'NAME': 'test',
-    'USER': local_settings.DB_USER,
-    'PASSWORD': local_settings.DB_PASS,
-    'HOST': 'localhost',
-    'PORT': '',
+    'NAME': os.environ.get('DB_DB'),
+    'USER': os.environ.get('DB_U'),
+    'PASSWORD': os.environ.get('DB_P'),
+    'HOST': os.environ.get('DB_H'),
+    'PORT': '5432',
 }
-SECRET_KEY=local_settings.key
-'''
-import django_heroku
-django_heroku.settings(locals(),logging=False,allowed_hosts=False,staticfiles=False,test_runner=False)
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
+AZURE_ACCOUNT_NAME = os.environ.get('USER_F')
+
+AZURE_ACCOUNT_KEY = os.environ.get('KEY_F')
+
+AZURE_CONTAINER = os.environ.get('CONT_F')
+
