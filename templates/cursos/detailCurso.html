@@ -1,5 +1,5 @@
+{% extends  "Base/base.html"%}
 {% load staticfiles %}
-{% include  "Base/base.html" with tittle=curso.nombre%}
 {% block jsLoad %}
     <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}" />
@@ -29,10 +29,10 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="jumbotron">
-    <div class="container">
+<div class="jumbotron  mdb-color blue-grey lighten-4 z-depth-2">
+    <div class="container p-3 mdb-color blue-grey lighten-5 z-depth-1">
         <div class="row">
-            <div class="col"><h1 class="h1 align-content-center">{{ curso.nombre }}</h1></div>
+            <div class="col"><h1 class="h1-responsive align-content-center">{{ curso.nombre }}</h1></div>
             <div class="col">
                 <nav aria-label="Paginado tipo de grafica">
                     <ul class="pagination">

@@ -1,4 +1,4 @@
-{% include  "Base/base.html" with tittle="Registro"%}
+{% extends  "Base/base.html"%}
 
 {% block navBarTop %}
 
@@ -23,8 +23,14 @@
 {% endblock %}
 
 {% block contenido %}
+    <section class="jumbotron jumbotron-fluid mdb-color blue-grey lighten-4 z-depth-2">
     <div class="container">
+    <div class="card mt-4  blue-grey lighten-5">
+        <div class="card-body">
         <form method="POST">
+
+
+             <p class="h4 text-center py-4">Registro</p>
              <div class="form-group">
               {{ form.username.label_tag }}
                 <div class="input-group">
@@ -66,7 +72,12 @@
             </div>
 
             {% csrf_token %}
-            <input type="submit" class="btn btn-primary" value="Enviar">
+            <div class="text-center py-4 mt-3">
+                <button class="btn btn-outline-primary " type="submit">Enviar<i class="fas fa-paper-plane"></i></button>
+            </div>
         </form>
     </div>
+    </div>
+    </div>
+    </section>
 {% endblock %}

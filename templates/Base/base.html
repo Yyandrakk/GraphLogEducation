@@ -13,10 +13,51 @@
 
     {% block jsLoad %}{% endblock %}
     <title>{{ tittle|default:"GraphLogEducation" }}</title>
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 <body>
        {% block navBarTop %}{% endblock %}
        {% block navBarLeft %}{% endblock %}
        {% block contenido %}{% endblock %}
+
+<footer class="footer page-footer font-small elegant-color pt-4 mt-4">
+
+    <!--Footer Links-->
+    <div class="container-fluid text-center text-md-left">
+        <div class="row">
+
+            <!--First column-->
+            <div class="col-md-6">
+                <h5 class="text-uppercase">Graph Log Education</h5>
+                <p>Proyecto de software libre que permite visulizar los logs de Moodle</p>
+            </div>
+            <!--/.First column-->
+
+            <!--Second column-->
+            <div class="col-md-6">
+                <h5 class="text-uppercase">Links</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="#!">Link 1</a>
+                    </li>
+                    <li>
+                        <a href="#!">Link 2</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.Second column-->
+        </div>
+    </div>
+    <!--/.Footer Links-->
+
+    <!--Copyright-->
+    <div class="footer-copyright py-3 text-center">
+       <!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/yyandrakk/GraphLogEducation" data-size="large" aria-label="Watch yyandrakk/GraphLogEducation on GitHub">Watch</a>
+    </div>
+    <!--/.Copyright-->
+
+</footer>
 </body>
 </html>

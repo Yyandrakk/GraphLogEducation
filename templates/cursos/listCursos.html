@@ -1,4 +1,5 @@
-{% include  "Base/base.html" with tittle="Cursos"%}
+{% extends  "Base/base.html"%}
+
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -21,7 +22,7 @@
 
 {% endblock %}
 {% block contenido %}
-<section class="py-5 bg-light">
+<section class="jumbotron jumbotron-fluid mdb-color blue-grey lighten-4 z-depth-2">
     <div class="container">
         <div class="row mb-sm-2">
              <a class="btn btn-primary" href="{% url "cursos:add" %}">Añadir curso</a>
@@ -29,7 +30,7 @@
         <div class="row">
             <div class="card-columns">
                 {% for curso in curso_list %}
-                   <div class="card bg-light">
+                   <div class="card  blue-grey lighten-5">
                         <div class="card-header">
                             {% if curso.procesado %}
                                 <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
