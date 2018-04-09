@@ -8,6 +8,14 @@ class FormCursoMoodle(forms.ModelForm):
     class Meta():
         model = CursoMoodle
         fields = ("nombre","desc","umbral", "documento")
+        help_texts = {
+            'nombre': ('Titulo del curso'),
+        }
+        error_messages = {
+            'nombre': {
+                'max_length': ("Ha superado el tamaño maximo"),
+            },
+        }
 
     def __init__(self,*args,**kwargs):
         self.user = kwargs.pop("instance", None)

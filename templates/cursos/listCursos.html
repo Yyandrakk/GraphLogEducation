@@ -36,8 +36,10 @@
                         <div class="card-header">
                             {% if curso.procesado %}
                                 <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
+                                <a class="float-right" href="{% url "cursos:update" slug=curso.slug %}"><i class="fas fa-cog fa-2x"></i></a>
                             {% else %}
                                 <a class="card-link disabled">{{ curso.nombre }}</a>
+                                <a class="float-right"><i class="fas fa-sync fa-spin fa-2x"></i>    </a>
                             {% endif %}
                         </div>
                         <div class="card-body">

@@ -1,8 +1,6 @@
 from random import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
-
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -10,8 +8,7 @@ from django.utils.text import slugify
 from django.views import generic
 
 from cursos.charts import graficaTiempo, graficaTiempoSemanal, graficaTiempoHora, graficaTiempoMedioContexto
-from cursos.models import CursoMoodle, TiempoDedicadoCursoMoodle, EstudianteCursoMoodle, \
-    TiempoDedicadoEstudianteCursoMoodle
+from cursos.models import CursoMoodle, EstudianteCursoMoodle
 from . import models
 from .forms import FormCursoMoodle
 
@@ -72,6 +69,22 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
         return super().dispatch(
             request, *args, **kwargs)
 
+
+class updateCursoView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "cursos/updateCurso.html"
+    model = models.CursoMoodle
+    context_object_name = 'curso'
+    form_class = FormCursoMoodle
+    success_url = reverse_lazy("cursos:todos")
+
+    def user_test(self,request,slug):
+        return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.user_test(request,kwargs.get('slug','')):
+            return redirect("cursos:todos")
+        return super().dispatch(
+            request, *args, **kwargs)
 
 def createChart(type,labels,data,tittle,label):
     '''
