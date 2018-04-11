@@ -30,32 +30,30 @@
                 <p>No coinciden el usuario y la contraseña</p>
         {% endif %}
     <div class="card mt-4  blue-grey lighten-5">
+        <div class="card-header">
+                <p class="h4 text-center py-4">Autentificación</p>
+            </div>
         <div class="card-body">
         <form method="POST">
-            <p class="h4 text-center py-4">Autentificación</p>
-            <div class="form-group">
 
-              {{ form.username.label_tag }}
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-user fa-fw"></i></span>
-                    </div>
-                    <input type="text" class="form-control" name="{{ form.username.name }}" id="{{ form.username.id }}" required maxlength="254" autofocus/>
-                </div>
 
+            <div class="md-form">
+              <i class="fas fa-user fa-fw prefix grey-text"></i>
+                <input type="text" class="form-control" name="{{ form.username.name }}" id="{{ form.username.id }}" required maxlength="254" autofocus/>
+                 {{ form.username.label_tag }}
             </div>
-            <div class="form-group">
-               {{ form.password.label_tag }}
-                 <div class="input-group">
-                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key fa-fw"></i> </span></div>
-                    <input type="password" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
-                 </div>
+
+            <div class="md-form">
+                <i class="fas fa-key fa-fw prefix grey-text"></i>
+                {{ form.password.label_tag }}
+                <input type="password" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
             </div>
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}"/>
             <div class="text-center py-4 mt-3">
                 <button class="btn btn-outline-primary " type="submit">Enviar<i class="fas fa-paper-plane"></i></button>
             </div>
+            
         </form>
 
     </div>
