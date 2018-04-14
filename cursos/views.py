@@ -1,4 +1,4 @@
-from random import random
+from random import randint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -13,6 +13,16 @@ from . import models
 from .forms import FormCursoMoodle
 
 
+def unique_slug_generator(slug):
+
+    if CursoMoodle.objects.filter(slug=slug).exists():
+        new_slug = "{slug}-{rand}".format(
+            slug=slug,
+            rand=randint(0,1000)
+        )
+        return unique_slug_generator(slug=new_slug)
+    return slug
+
 class indexCursoView(LoginRequiredMixin,generic.ListView):
     template_name = "cursos/listCursos.html"
     context_object_name = 'curso_list'
@@ -21,15 +31,6 @@ class indexCursoView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return self.models.objects.filter(profesor_id=self.request.user.id)
 
-def unique_slug_generator(slug):
-
-    if CursoMoodle.objects.filter(slug=slug).exists():
-        new_slug = "{slug}-{rand}".format(
-            slug=slug,
-            rand=random.randint(0,1000)
-        )
-        return unique_slug_generator(slug=new_slug)
-    return slug
 
 class addCursoView(LoginRequiredMixin, generic.CreateView):
     template_name = "cursos/addCursos.html"

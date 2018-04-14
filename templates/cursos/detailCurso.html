@@ -1,6 +1,7 @@
 {% extends  "Base/base.html"%}
 {% load staticfiles %}
 {% block jsLoad %}
+    <script src="{% static 'js/moment-with-locales.js' %}"></script>
     <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}" />
     <script src="{% static 'js/select2.full.min.js' %}"></script>
@@ -44,7 +45,7 @@
                 </nav>
             </div>
             <div id="divSelect" class="col invisible">
-                <select class="js-example-basic-single" id="selectSTD">
+                <label for="selectSTD">Estudiantes:</label><select class="js-example-basic-single" id="selectSTD">
                 {% for estudiante in estudiantes %}
                     <option value="{{estudiante.id}}">{{estudiante.nombre}}</option>
                 {% endfor %}
@@ -52,25 +53,25 @@
             </div>
         </div>
 
-
-                
-        <div id="carousel_charts" class="carousel slide border border-primary" data-ride="carousel">
+        <div id="carousel_charts" class="carousel slide carousel-fade" data-ride="carousel">
             <ol id="olIndicator" class="carousel-indicators">
             </ol>
             <div id="container_charts" class="carousel-inner"></div>
-            <a class="btn-floating carousel-control-prev" href="#carousel_charts" role="button" data-slide="prev">
+            <a class=" carousel-control-prev" href="#carousel_charts" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="btn-floating carousel-control-next" href="#carousel_charts" role="button" data-slide="next">
+            <a class="carousel-control-next" href="#carousel_charts" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
         </div>
     </div>
     </div>
+{% endblock %}
 
-<script>
+{% block jsBody %}
+    <script>
 
      $(document).ready(function() {
          pestanyaGeneral();
