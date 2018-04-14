@@ -36,11 +36,13 @@
             <div class="col"><h1 class="h1-responsive align-content-center">{{ curso.nombre }}</h1></div>
             <div class="col">
                 <nav aria-label="Paginado tipo de grafica">
-                    <ul class="pagination">
+                    <ul class="pagination pagination-circle pg-bluegrey">
                         <li id="liGeneral" class="page-item active">
                             <a class="page-link" href="javascript: cambioPestanya(false);">General</a>
                         </li>
-                        <li id="liSTD" class="page-item"><a class="page-link" href="javascript: cambioPestanya(true);">Estudiantes</a></li>
+                        <li id="liSTD" class="page-item">
+                            <a class="page-link" href="javascript: cambioPestanya(true);">Estudiantes</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -87,13 +89,13 @@
 
         if(esUsuarios){
             divSel.attr('class', 'col visible');
-            $("#liGeneral").attr('class','page-item');
-            $("#liSTD").attr('class','page-item active');
+            $("#liGeneral").removeClass('active');
+            $("#liSTD").addClass('active');
             pestanyaUsuarios();
         }else{
            divSel.attr('class', 'col invisible');
-           $("#liGeneral").attr('class','page-item active');
-           $("#liSTD").attr('class','page-item');
+           $("#liGeneral").addClass('active');
+           $("#liSTD").removeClass('active');
            pestanyaGeneral();
         }
 
