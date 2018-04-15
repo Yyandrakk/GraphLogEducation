@@ -46,45 +46,31 @@
           {% endif %}
         </div>
     {% endif %}
-<section class="jumbotron jumbotron-fluid mdb-color blue-grey lighten-4 z-depth-2">
+<section class=" mdb-color blue-grey lighten-4">
     <div class="container">
     <div class="card mt-4  blue-grey lighten-5">
         <div class="card-body">
         <form method="POST" enctype="multipart/form-data">
-             <div class="form-group">
-              {{ form.nombre.label_tag }}
-                <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user fa-fw"></i></span></div>
-                       {{ form.nombre }}
-                </div>
-
+             <div class="md-form">
+                 <i class="fab fa-discourse fa-fw prefix grey-text"></i>
+                {{ form.nombre.label_tag }}
+                {{ form.nombre }}
             </div>
-            <div class="form-group">
-              {{ form.desc.label_tag }}
-                <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-comment fa-fw"></i></span></div>
-                       {{ form.desc }}
-                </div>
-
+            <div class="md-form">
+                <i class="fas fa-comment fa-fw prefix grey-text"></i>
+                {{ form.desc.label_tag }}
+                {{ form.desc }}
             </div>
-            <div class="form-group">
-               {{ form.umbral.label_tag }}
-                 <div class="input-group">
-                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-clock fa-fw"></i></span></div>
-                    {{ form.umbral }}
-                 </div>
+            <div class="md-form">
+                <i class="fas fa-clock fa-fw prefix grey-text"></i>
+                {{ form.umbral.label_tag }}
+                {{ form.umbral }}
             </div>
 
-            <div class="form-group">
-
-                 <div class="input-group">
-                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-file-excel fa-fw"></i></span></div>
-                     <div class="custom-file">
-                         {{ form.documento }}
-                         <label class="custom-file-label" for="{{ form.documento.auto_id }}"> {{ form.documento.label }}</label>
-
-                     </div>
-                 </div>
+            <div class="md-form">
+                <i class="fas fa-file-excel fa-fw prefix grey-text"></i>
+                <label class="custom-file-label" for="{{ form.documento.id_for_label }}"> {{ form.documento.label }}</label>
+                {{ form.documento }}
             </div>
             {% csrf_token %}
             <div class="row my-3 d-flex justify-content-center">

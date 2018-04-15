@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="jumbotron  mdb-color blue-grey lighten-4 z-depth-2">
+<div class="mt-3 mdb-color blue-grey lighten-4">
     <div class="container p-3 mdb-color blue-grey lighten-5 z-depth-1">
         <div class="row">
             <div class="col"><h1 class="h1-responsive align-content-center">{{ curso.nombre }}</h1></div>
@@ -46,12 +46,22 @@
                     </ul>
                 </nav>
             </div>
-            <div id="divSelect" class="col invisible">
-                <label for="selectSTD">Estudiantes:</label><select class="js-example-basic-single" id="selectSTD">
+            <div id="divSelectSTD" class="col d-none">
+                <label for="selectSTD">Estudiantes:</label>
+                <select  id="selectSTD"  class="js-example-basic-single">
                 {% for estudiante in estudiantes %}
                     <option value="{{estudiante.id}}">{{estudiante.nombre}}</option>
                 {% endfor %}
                 </select>
+            </div>
+            <div id="divSelectGN" class="col">
+                <label for="selectGN">Cursos:</label>
+                <select id="selectGN"  class="js-example-basic-single" multiple="multiple">
+                {% for curso in otrosCursos %}
+                    <option value="{{curso.id}}">{{curso.nombre}}</option>
+                {% endfor %}
+                </select>
+                <button class="btn btn-sm btn-default" onclick="pestanyaGeneral()">Actualizar</button>
             </div>
         </div>
 
@@ -81,19 +91,25 @@
              pestanyaUsuarios();
          });
 
-          $('.js-example-basic-single').select2();
+          $('#selectSTD').select2();
+          $('#selectGN').select2({
+              maximumSelectionLength: 2,
+               placeholder: "Seleccione dos cursos"
+          });
      });
 
      function cambioPestanya(esUsuarios) {
-        var divSel= $("#divSelect");
-
+        var divSelSTD= $("#divSelectSTD");
+        var divSelGN= $("#divSelectGN");
         if(esUsuarios){
-            divSel.attr('class', 'col visible');
+            divSelSTD.removeClass('d-none');
+            divSelGN.addClass('d-none');
             $("#liGeneral").removeClass('active');
             $("#liSTD").addClass('active');
             pestanyaUsuarios();
         }else{
-           divSel.attr('class', 'col invisible');
+            divSelGN.removeClass('d-none');
+            divSelSTD.addClass('d-none');
            $("#liGeneral").addClass('active');
            $("#liSTD").removeClass('active');
            pestanyaGeneral();
@@ -117,11 +133,13 @@
      }
 
      function pestanyaGeneral(){
+        var id_GN=$("#selectGN").val();
         $.ajax({
              type:"GET",
              url:"{% url "cursos:ajaxGeneral" %}",
              data: {
-                'id': {{ curso.id }}
+                'id': {{ curso.id }},
+                 'idsGN': JSON.stringify(id_GN)
              },
              dataType: 'json',
              success:crearGraficos
@@ -150,7 +168,7 @@
 
         });
 
-        $('.carousel').carousel();
+        $('.carousel').carousel('pause');
 
     }
 </script>

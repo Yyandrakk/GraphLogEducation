@@ -57,7 +57,9 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(detailCursoView,self).get_context_data()
-        context['estudiantes'] = EstudianteCursoMoodle.objects.filter(curso__id=context['curso'].id).order_by('nombre')
+        curso = context['curso']
+        context['estudiantes'] = EstudianteCursoMoodle.objects.filter(curso__id=curso.id).order_by('nombre')
+        context['otrosCursos'] = CursoMoodle.objects.exclude(id=curso.id).exclude(procesado=False).filter(profesor__id=curso.profesor_id).order_by('nombre')
         return context
 
     def user_test(self,request,slug):
@@ -75,8 +77,8 @@ class updateCursoView(LoginRequiredMixin, generic.UpdateView):
     template_name = "cursos/updateCurso.html"
     model = models.CursoMoodle
     context_object_name = 'curso'
-    form_class = FormCursoMoodle
     success_url = reverse_lazy("cursos:todos")
+    fields = ["nombre", "desc", "umbral", "documento"]
 
     def user_test(self,request,slug):
         return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()
@@ -100,11 +102,12 @@ def createChart(type,labels,data,tittle,label):
 def ajaxCharts(request):
     charts=[]
     id = request.GET.get('id', None)
+    idsGN = request.GET.get('idsGN', None)
     if id != None and CursoMoodle.objects.filter(pk=id).exists():
         # Grafica dia/#evento
-        charts.append(graficaTiempo(id))
+        charts.append(graficaTiempo(id,idsGN=idsGN))
         # Grafica semana/#evento
-        charts.append(graficaTiempoSemanal(id))
+        charts.append(graficaTiempoSemanal(id,idsGN=idsGN))
         # Grafica hora/#evento
         charts.append(graficaTiempoHora(id))
         # Grafica media contextos
