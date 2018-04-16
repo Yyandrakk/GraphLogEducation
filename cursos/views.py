@@ -10,7 +10,7 @@ from django.views import generic
 from cursos.charts import graficaTiempo, graficaTiempoSemanal, graficaTiempoHora, graficaTiempoMedioContexto
 from cursos.models import CursoMoodle, EstudianteCursoMoodle
 from . import models
-from .forms import FormCursoMoodle
+from .forms import FormCursoMoodle, FormUpdateCMoodle
 
 
 def unique_slug_generator(slug):
@@ -76,12 +76,16 @@ class detailCursoView(LoginRequiredMixin ,generic.DetailView):
 class updateCursoView(LoginRequiredMixin, generic.UpdateView):
     template_name = "cursos/updateCurso.html"
     model = models.CursoMoodle
+    form_class = FormUpdateCMoodle
     context_object_name = 'curso'
     success_url = reverse_lazy("cursos:todos")
-    fields = ["nombre", "desc", "umbral", "documento"]
 
     def user_test(self,request,slug):
         return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()
+
+    def get_context_data(self, **kwargs):
+        context = super(updateCursoView,self).get_context_data()
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         if not self.user_test(request,kwargs.get('slug','')):

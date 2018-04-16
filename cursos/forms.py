@@ -37,6 +37,30 @@ class FormCursoMoodle(forms.ModelForm):
 
         return datos
 
+class FormUpdateCMoodle(forms.ModelForm):
+
+    class Meta():
+        model = CursoMoodle
+        fields = ("desc","umbral", "documento")
+
+
+    def __init__(self,*args,**kwargs):
+        self.user = kwargs.pop("instance", None)
+        super(FormUpdateCMoodle,self).__init__(*args,**kwargs)
+        for v in self.visible_fields():
+            v.field.required = False
+            v.field.widget.attrs['class'] = 'form-control'
+
+        self.fields['documento'].widget.attrs['class'] = 'custom-file-input'
+        self.fields['documento'].required = False
+
+    def clean(self):
+        datos = super(FormUpdateCMoodle,self).clean()
+        return datos
+
+
+
+
 
 
 

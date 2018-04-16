@@ -49,6 +49,9 @@
 <section class=" mdb-color blue-grey lighten-4">
     <div class="container">
     <div class="card mt-4  blue-grey lighten-5">
+        <div class="card-header">
+            {{ curso.nombre }}
+        </div>
         <div class="card-body">
         <form method="POST" enctype="multipart/form-data">
              <div class="md-form">
@@ -70,7 +73,7 @@
             <div class="md-form">
                 <i class="fas fa-file-excel fa-fw prefix grey-text"></i>
                 <label class="custom-file-label" for="{{ form.documento.id_for_label }}"> {{ form.documento.label }}</label>
-                {{ form.documento }}
+                <input name="documento" class="custom-file-input" required="" id="{{ form.documento.auto_id }}" type="file">
             </div>
             {% csrf_token %}
             <div class="row my-3 d-flex justify-content-center">
