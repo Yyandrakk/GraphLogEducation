@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block contenido %}
-<div class="mt-3 mdb-color blue-grey lighten-4">
+<div class="mt-3 mdb-color blue-grey lighten-4 mb-5">
     <div class="container p-3 mdb-color blue-grey lighten-5 z-depth-1">
         <div class="row">
             <div class="col"><h1 class="h1-responsive align-content-center">{{ curso.nombre }}</h1></div>
@@ -94,7 +94,8 @@
           $('#selectSTD').select2();
           $('#selectGN').select2({
               maximumSelectionLength: 2,
-               placeholder: "Seleccione dos cursos"
+               placeholder: "Seleccione dos cursos",
+              width: '40%'
           });
      });
 
