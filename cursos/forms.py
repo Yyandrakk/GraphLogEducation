@@ -41,7 +41,7 @@ class FormUpdateCMoodle(forms.ModelForm):
 
     class Meta():
         model = CursoMoodle
-        fields = ("desc","umbral", "documento")
+        fields = ["desc","umbral", "documento"]
 
 
     def __init__(self,*args,**kwargs):
@@ -57,6 +57,14 @@ class FormUpdateCMoodle(forms.ModelForm):
     def clean(self):
         datos = super(FormUpdateCMoodle,self).clean()
         return datos
+
+    def save(self, commit=True):
+        instance = super(FormUpdateCMoodle, self).save(commit=False)
+
+        if commit:
+            instance.save(update_fields=self.changed_data)
+
+        return instance
 
 
 

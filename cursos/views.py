@@ -1,7 +1,7 @@
 from random import randint
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -79,6 +79,20 @@ class updateCursoView(LoginRequiredMixin, generic.UpdateView):
     form_class = FormUpdateCMoodle
     context_object_name = 'curso'
     success_url = reverse_lazy("cursos:todos")
+
+    def get_initial(self):
+        initial = super(updateCursoView, self).get_initial()
+        initial['desc'] = self.object.desc
+        initial['umbral'] = self.object.umbral
+        return initial
+
+    def form_valid(self, form):
+        if(form.has_changed() and form.is_valid()):
+            form.instance = CursoMoodle.objects.get(id=self.object.id)
+            form.save(commit=True)
+
+        return HttpResponseRedirect(self.get_success_url())
+
 
     def user_test(self,request,slug):
         return models.CursoMoodle.objects.filter(slug=slug,profesor_id=request.user.id).exists()

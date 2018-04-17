@@ -134,6 +134,6 @@ def creacion_informacion_curso(sender,instance,created, **kwargs):
         ProcesarFicheroThread(instance).start()
         pass
     else:
-        if "documento" is kwargs.get("update_fields",False):
+        if "documento" in kwargs.get("update_fields",[]):
             print("documento")
 
