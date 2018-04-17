@@ -61,6 +61,14 @@ class FormUpdateCMoodle(forms.ModelForm):
     def save(self, commit=True):
         instance = super(FormUpdateCMoodle, self).save(commit=False)
 
+        for e in self.changed_data:
+            if e=='desc':
+                instance.desc = self.cleaned_data[e]
+            elif e=='documento':
+                instance.documento= self.cleaned_data[e]
+            elif e == 'umbral':
+                instance.umbral = self.cleaned_data[e]
+
         if commit:
             instance.save(update_fields=self.changed_data)
 
