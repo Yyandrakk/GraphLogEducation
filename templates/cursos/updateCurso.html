@@ -73,7 +73,7 @@
             <div class="md-form">
                 <i class="fas fa-file-excel fa-fw prefix grey-text"></i>
                 <label class="custom-file-label" for="{{ form.documento.id_for_label }}"> {{ form.documento.label }}</label>
-                <input name="documento" class="custom-file-input" required="" id="{{ form.documento.auto_id }}" type="file">
+                <input name="documento" class="custom-file-input" id="{{ form.documento.auto_id }}" type="file">
             </div>
             {% csrf_token %}
             <div class="row my-3 d-flex justify-content-center">

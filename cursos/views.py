@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import generic
 
-from cursos.charts import graficaTiempo, graficaTiempoSemanal, graficaTiempoHora, graficaTiempoMedioContexto
+from cursos.charts import graficaTiempo, graficaTiempoSemanal, graficaTiempoHora, graficaTiempoMedioContexto, \
+    graficaTiempoInvertido
 from cursos.models import CursoMoodle, EstudianteCursoMoodle
 from . import models
 from .forms import FormCursoMoodle, FormUpdateCMoodle
@@ -130,6 +131,9 @@ def ajaxCharts(request):
         charts.append(graficaTiempoHora(id))
         # Grafica media contextos
         charts.append(graficaTiempoMedioContexto(id))
+        #Grafica tiempo invertido
+        charts.append(graficaTiempoInvertido(id))
+
     return JsonResponse(charts,safe=False)
 
 def ajaxSTDCharts(request):
@@ -141,5 +145,6 @@ def ajaxSTDCharts(request):
         charts.append(graficaTiempoSemanal(id,id_std))
         charts.append(graficaTiempoHora(id,id_std))
         charts.append(graficaTiempoMedioContexto(id,id_std))
+        charts.append(graficaTiempoInvertido(id,id_std))
 
     return JsonResponse(charts, safe=False)

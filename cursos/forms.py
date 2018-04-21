@@ -8,6 +8,9 @@ class FormCursoMoodle(forms.ModelForm):
     class Meta():
         model = CursoMoodle
         fields = ("nombre","desc","umbral", "documento")
+        labels = {
+            "desc": "Descripción"
+        }
         help_texts = {
             'nombre': ('Titulo del curso'),
         }
@@ -42,6 +45,9 @@ class FormUpdateCMoodle(forms.ModelForm):
     class Meta():
         model = CursoMoodle
         fields = ["desc","umbral", "documento"]
+        labels = {
+            "desc": "Descripción"
+        }
 
 
     def __init__(self,*args,**kwargs):

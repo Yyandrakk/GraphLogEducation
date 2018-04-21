@@ -32,3 +32,14 @@ body > .container {
 code {
   font-size: 80%;
 }
+
+.carousel-control-prev {
+    left: -9em;
+}
+.carousel-control-next{
+  right: -9em;
+}
+
+.carousel-indicators{
+  bottom: -1.5em;
+}

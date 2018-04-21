@@ -4,8 +4,9 @@ from datetime import datetime
 from django.db.models import Sum, Avg
 from django.db.models.functions import ExtractWeek, ExtractYear
 
-from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle, TiempoInvertidoEnCursoMoodle, \
-    CursoMoodle
+from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle, \
+    TiempoInvertidoMaterialCursoMoodle, \
+    CursoMoodle, TiempoInvertidoEstudianteCursoMoodle
 
 colors = ['#8bc34a','#00cc66']
 
@@ -166,17 +167,12 @@ def graficaTiempoMedioContexto(id_curso,id_std=None):
     dataset = []
 
     if id_std!=None:
-        for cuestionario in TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso,estudiante_id=id_std).exclude(
-                contexto__isnull=True).values('contexto__nombre').annotate(media=Sum('seconds')).order_by( 'contexto__nombre'):
+        for cuestionario in TiempoInvertidoMaterialCursoMoodle.objects.filter(curso_id=id_curso,estudiante_id=id_std).exclude(
+                contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by( 'contexto__nombre'):
             labels.append(cuestionario['contexto__nombre'])
             data.append(cuestionario['media'] / 60)
-
-        cuestionario = TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso, estudiante_id=id_std, contexto__isnull=True).first()
-        labels.append("Tiempo en la plataforma")
-        data.append(cuestionario.seconds / 60)
-        dataset.append({'data': data, 'label': 'Minutos', 'backgroundColor': "#3e95cd"})
     else:
-        for cuestionario in TiempoInvertidoEnCursoMoodle.objects.filter(curso_id=id_curso).exclude(contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by('contexto__nombre'):
+        for cuestionario in TiempoInvertidoMaterialCursoMoodle.objects.filter(curso_id=id_curso).exclude(contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by('contexto__nombre'):
             labels.append(cuestionario['contexto__nombre'])
             data.append(cuestionario['media']/60)
 
@@ -190,6 +186,34 @@ def graficaTiempoMedioContexto(id_curso,id_std=None):
                             'fontSize': 16
                         }
                         }
+    return chart
+
+def graficaTiempoInvertido(id_curso,id_std=None):
+    chart = {'type': 'line'}
+    dataset = []
+
+    if id_std!=None:
+        data = []
+        for cuestionario in TiempoInvertidoEstudianteCursoMoodle.objects.filter(curso_id=id_curso,estudiante_id=id_std):
+            data.append({'x': format(cuestionario.timestamp, "%d/%m/%Y"), 'y': (cuestionario.seconds/ 60)})
+
+        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': 'Estudiante'})
+
+    data = []
+    for cuestionario in TiempoInvertidoEstudianteCursoMoodle.objects.values('timestamp').filter(curso_id=id_curso).annotate(media=Avg('seconds')).order_by('timestamp'):
+        data.append({'x': format(cuestionario['timestamp'], "%d/%m/%Y"), 'y': (cuestionario['media'] / 60)})
+
+    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'General'})
+
+    chart['data'] = {'datasets': dataset}
+    chart['options'] = {
+        'scales': {'xAxes': [{'type': 'time', 'time': {'unit': 'day', 'round': 'day', 'parser': 'D/M/YYY'}}]},
+        'title': {
+            'display': 'true',
+            'text': 'Tiempo invertido',
+            'fontSize': 16
+        }
+        }
     return chart
 
 
