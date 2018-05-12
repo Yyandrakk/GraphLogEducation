@@ -34,12 +34,18 @@ class ProcesarFicheroThread(threading.Thread):
             cues_unicos = set(map(func, fil_cues['Contexto del evento'].unique()))
 
             for name in arc_unicos:
-                archivo = MaterialCursoMoodle(nombre=name, curso=self.instance, tipo=MaterialCursoMoodle.ARCHIVO)
+                archivo = MaterialCursoMoodle(nombre=name.strip(), curso=self.instance, tipo=MaterialCursoMoodle.ARCHIVO)
                 archivo.save()
 
             for name in cues_unicos:
-                cuestionario = MaterialCursoMoodle(nombre=name, curso=self.instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
+                cuestionario = MaterialCursoMoodle(nombre=name.strip(), curso=self.instance, tipo=MaterialCursoMoodle.CUESTIONARIO)
                 cuestionario.save()
+
+            for fila in pd.DataFrame({'count': fil_arc.groupby(pd.Grouper(key='Contexto del evento')).size()}).reset_index().itertuples():
+                archivo = MaterialCursoMoodle.objects.filter(nombre=fila._1.split(':')[1].strip(), curso=self.instance,
+                                              tipo=MaterialCursoMoodle.ARCHIVO).first()
+                archivo.contador = fila.count
+                archivo.save()
 
             auxDiasDf = pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index()
             for fila in auxDiasDf.itertuples():

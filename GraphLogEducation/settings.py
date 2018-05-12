@@ -94,6 +94,8 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 ]
 
+AUTH_USER_MODEL = 'usuarios.Usuario'
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -141,8 +143,6 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = 'media'
 MEDIA_URL = '/media/'
 
-
-AUTH_USER_MODEL = 'usuarios.Usuario'
 
 LOGIN_URL = 'user:login'
 

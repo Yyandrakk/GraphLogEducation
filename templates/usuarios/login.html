@@ -26,9 +26,7 @@
 {% block contenido %}
 <section class="mt-3 mdb-color blue-grey lighten-4">
     <div class="container">
-        {% if form.errors %}
-                <p>No coinciden el usuario y la contraseña</p>
-        {% endif %}
+
     <div class="card mt-4  blue-grey lighten-5">
         <div class="card-header">
                 <p class="h4 text-center py-4">Autentificación</p>
@@ -48,6 +46,9 @@
                 {{ form.password.label_tag }}
                 <input type="password" class="form-control" name="{{ form.password.name }}" id="{{ form.password.id }}" required maxlength="254" autofocus/>
             </div>
+            {% if form.errors %}
+                <div  class="red-text">No coinciden el usuario y la contraseña</div>
+            {% endif %}
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}"/>
             <div class="text-center py-4 mt-3">

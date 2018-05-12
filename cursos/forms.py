@@ -81,6 +81,28 @@ class FormUpdateCMoodle(forms.ModelForm):
         return instance
 
 
+class ConfirmDeleteForm(forms.ModelForm):
+    confirm = forms.CharField(label='Introduzca el nombre del curso', max_length=100)
+
+    class Meta:
+        model = CursoMoodle
+        fields = []
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("instance", None)
+        super(ConfirmDeleteForm, self).__init__(*args, **kwargs)
+        for v in self.visible_fields():
+            v.field.widget.attrs['class'] = 'form-control'
+
+    def clean(self):
+        confirm = super().clean().get('confirm')
+
+        if self.instance.nombre.lower() != confirm.lower():
+            raise forms.ValidationError({
+                'confirm': forms.ValidationError('Nombre incorrecto', code='invalid'),
+            })
+
+
 
 
 

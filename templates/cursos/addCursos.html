@@ -17,7 +17,11 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
+
     </ul>
+          <ul class="navbar-nav navbar-right">
+      <li class="nav-item"><h5 class="h5-responsive white-text">Bienvenido {{ user.first_name }}</h5></li>
+   </ul>
   </div>
 </nav>
 
@@ -83,7 +87,7 @@
             //get the file name
             var fileName = $(this).val().split('\\').pop();
             //replace the "Choose a file" label
-            $(this).next('.custom-file-label').html(fileName);
+           $($('.custom-file-label')[0]).html(fileName);
         })
     </script>
 {% endblock %}

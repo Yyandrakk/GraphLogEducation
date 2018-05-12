@@ -24,6 +24,9 @@
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
     </ul>
+          <ul class="navbar-nav navbar-right">
+      <li class="nav-item"><h5 class="h5-responsive white-text">Bienvenido {{ user.first_name }}</h5></li>
+   </ul>
   </div>
 </nav>
 
@@ -94,7 +97,7 @@
           $('#selectSTD').select2();
           $('#selectGN').select2({
               maximumSelectionLength: 2,
-               placeholder: "Seleccione dos cursos",
+               placeholder: "Seleccione dos",
               width: '40%'
           });
      });

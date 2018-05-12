@@ -21,7 +21,7 @@ def load(path):
     times = pd.DatetimeIndex(df['Hora'])
     #print(df.groupby(pd.Grouper(key='Hora', freq='24H')).count())
     # aux=pd.DataFrame({'count': df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index()
-    # print(pd.DataFrame({'count' :df.groupby(pd.Grouper(key='Hora', freq='D')).size()}).reset_index())
+    #
     #aux = pd.DataFrame({'count':df.groupby([times.hour]).size()}).reset_index()
     #print(pd.DataFrame({'count':df.groupby([times.hour]).size()}).reset_index())
     #print(type(aux.iloc[0,0]))
@@ -42,11 +42,13 @@ def load(path):
         if fecha_anterior != None and (fecha - fecha_anterior).seconds <umbral_sec:
             time_invertido += (fecha - fecha_anterior).seconds
         fecha_anterior=fecha
-        '''
+        
 
     for fila in df.loc[(df['Nombre completo del usuario'] == "Maria Muñoz Sanz") & df['Nombre evento'].isin(['Ha comenzado el intento','Intento enviado'])].sort_values(by=['Nombre completo del usuario','Contexto del evento','Hora']).itertuples():
         print('Name: {0}, Fecha: {1}, Contexto: {2}, Nombre evento: {3}'.format(fila._2,fila.Hora, fila._4,fila._6))
+    '''
 
+    print(pd.DataFrame({'count': df[df['Contexto del evento'].str.contains("Archivo:")].groupby(pd.Grouper(key='Contexto del evento')).size()}).reset_index())
 
 
 

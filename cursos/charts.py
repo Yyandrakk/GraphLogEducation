@@ -6,7 +6,7 @@ from django.db.models.functions import ExtractWeek, ExtractYear
 
 from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCursoMoodle, \
     TiempoInvertidoMaterialCursoMoodle, \
-    CursoMoodle, TiempoInvertidoEstudianteCursoMoodle
+    CursoMoodle, TiempoInvertidoEstudianteCursoMoodle, MaterialCursoMoodle
 
 colors = ['#8bc34a','#00cc66']
 
@@ -183,6 +183,33 @@ def graficaTiempoMedioContexto(id_curso,id_std=None):
                         'title': {
                             'display': 'true',
                             'text': 'Tiempo medio en cada contexto',
+                            'fontSize': 16
+                        }
+                        }
+    return chart
+
+def graficaUsoArchivos(id_curso):
+
+    chart = {'type': 'bar'}
+    labels = []
+    data = []
+    dataset = []
+    count = MaterialCursoMoodle.objects.filter(curso_id=id_curso,
+                                               tipo=MaterialCursoMoodle.ARCHIVO).aggregate(
+        total=Sum('contador'))
+
+    for archivo in MaterialCursoMoodle.objects.filter(curso_id=id_curso,
+                                              tipo=MaterialCursoMoodle.ARCHIVO).order_by('nombre'):
+        labels.append(archivo.nombre)
+        data.append((archivo.contador/ count['total'])*100)
+
+    dataset.append({'data': data, 'label': '% Eventos','backgroundColor':"#3e95cd"})
+
+    chart['data'] = {'labels': labels, 'datasets': dataset}
+    chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]},
+                        'title': {
+                            'display': 'true',
+                            'text': 'Media del uso de archivos',
                             'fontSize': 16
                         }
                         }

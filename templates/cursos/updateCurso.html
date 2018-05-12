@@ -23,6 +23,9 @@
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
     </ul>
+          <ul class="navbar-nav navbar-right">
+      <li class="nav-item"><h5 class="h5-responsive white-text">Bienvenido {{ user.first_name }}</h5></li>
+   </ul>
   </div>
 </nav>
 
@@ -49,7 +52,7 @@
 <section class=" mdb-color blue-grey lighten-4">
     <div class="container">
     <div class="card mt-4  blue-grey lighten-5">
-        <div class="card-header">
+        <div class="card-header h3-responsive">
             {{ curso.nombre }}
         </div>
         <div class="card-body">
@@ -81,7 +84,7 @@
                 <button class="btn btn-warning " type="submit">Actualizar<i class="fas fa-save fa-lg pl-1"></i></button>
             </div>
             <div class="text-center py-4 mt-3">
-                <button class="btn btn-danger" >Eliminar<i class="fas fa-exclamation-triangle fa-lg pl-1"></i></button>
+                <a class="btn btn-danger" id="delete" href="{% url "cursos:delete" slug=curso.slug %}">Eliminar<i class="fas fa-exclamation-triangle fa-lg pl-1"></i></a>
             </div>
             </div>
         </form>
