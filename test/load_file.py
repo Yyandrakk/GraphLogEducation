@@ -6,17 +6,17 @@ def load(path):
     filter=df.apply(lambda fila: fila.iloc[1] != '-' and "Administrador" not in fila.iloc[1],axis=1)
     df=df[filter]
 
-    # print(list(df['Contexto del evento'].unique()))
+    #print(list(df['Contexto del evento'].unique()))
     #print(df)
     #n_unicos = list(df['Nombre completo del usuario'].unique()))
     # print (df['Nombre completo del usuario'].unique())
-    # fil_arc = df[df['Contexto del evento'].str.contains("Archivo:")]
+    fil_arc = df[df['Contexto del evento'].str.contains("Archivo:")]
     # fil_cues =  df[df['Contexto del evento'].str.contains("Cuestionario:")]
     # fil_arc_cues = df[fil_arc] or df[fil_cues]
     # #aux = df.loc[fil_arc_cues,'Contexto del evento']
     # aux=df['Contexto del evento'].where(lambda t: "Archivo:" in t or "Cuestionario:" in t).dropna()
-    # func = lambda s: s.split(':')[1].strip()auth_group_permissions
-    # print(list(map(func,fil_arc['Contexto del evento'].unique())))
+    func = lambda s: s.split(':')[1].strip()
+    print(list(map(func,fil_arc['Contexto del evento'].unique())))
     # print(set(map(func, fil_cues['Contexto del evento'].unique())))
     times = pd.DatetimeIndex(df['Hora'])
     #print(df.groupby(pd.Grouper(key='Hora', freq='24H')).count())
@@ -46,10 +46,10 @@ def load(path):
 
     for fila in df.loc[(df['Nombre completo del usuario'] == "Maria Muñoz Sanz") & df['Nombre evento'].isin(['Ha comenzado el intento','Intento enviado'])].sort_values(by=['Nombre completo del usuario','Contexto del evento','Hora']).itertuples():
         print('Name: {0}, Fecha: {1}, Contexto: {2}, Nombre evento: {3}'.format(fila._2,fila.Hora, fila._4,fila._6))
-    '''
+   
 
     print(pd.DataFrame({'count': df[df['Contexto del evento'].str.contains("Archivo:")].groupby(pd.Grouper(key='Contexto del evento')).size()}).reset_index())
-
+    '''
 
 
 

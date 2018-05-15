@@ -24,7 +24,7 @@ def graficaTiempo(id_curso, id_std=None, idsGN=None):
             for dia in dias:
                 data.append({'x': format(dia.timestamp, "%d/%m/%Y"), 'y': ((dia.contador / count['total']) * 100)})
             curso = CursoMoodle.objects.filter(id=idGN).first()
-            dataset.append({'data': data, 'borderColor': colors[i], 'label': 'Eventos '+curso.nombre})
+            dataset.append({'data': data, 'borderColor': colors[i], 'label': '%Eventos '+curso.nombre})
             i+=1
 
     elif id_std!=None:
@@ -34,7 +34,7 @@ def graficaTiempo(id_curso, id_std=None, idsGN=None):
         data = []
         for dia in dias:
             data.append({'x':format(dia.timestamp, "%d/%m/%Y"),'y':((dia.contador / count['total']) * 100)})
-        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': 'Eventos estudiante'})
+        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': '%Eventos estudiante'})
 
     dias = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id_curso, tipo=TiempoDedicadoCursoMoodle.DIA)
     count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id_curso, tipo=TiempoDedicadoCursoMoodle.DIA).aggregate(
@@ -43,7 +43,7 @@ def graficaTiempo(id_curso, id_std=None, idsGN=None):
     for dia in dias:
        data.append({'x':format(dia.timestamp, "%d/%m/%Y"),'y':((dia.contador / count['total']) * 100)})
 
-    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos general'})
+    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': '%Eventos general'})
     chart['data'] = {'datasets': dataset}
     chart['options'] = {'scales': {'xAxes':[{'type':'time','time':{'unit':'day','round':'day','parser':'D/M/YYY'} }]},
                         'title': {
@@ -76,7 +76,7 @@ def graficaTiempoSemanal(id_curso, id_std=None,idsGN=None):
                                                     "%Y %W %w").strftime("%d/%m/%Y"),
                              'y': ((semana['s'] / count['total']) * 100)})
             curso = CursoMoodle.objects.filter(id=idGN).first()
-            dataset.append({'data': data, 'borderColor': colors[i], 'label': 'Eventos '+curso.nombre})
+            dataset.append({'data': data, 'borderColor': colors[i], 'label': '%Eventos '+curso.nombre})
             i+=1
     elif id_std != None:
         semanas = TiempoDedicadoEstudianteCursoMoodle.objects.filter(curso_id=id_curso,estudiante_id=id_std, tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD).annotate(
@@ -85,7 +85,7 @@ def graficaTiempoSemanal(id_curso, id_std=None,idsGN=None):
                                                          tipo=TiempoDedicadoEstudianteCursoMoodle.DIA_STD).aggregate(total=Sum('contador'))
         for semana in semanas:
             data.append({'x': datetime.strptime(str(semana['anyo']) + ' ' + str(semana['week']) + ' 1',"%Y %W %w").strftime("%d/%m/%Y"),'y': ((semana['s'] / count['total']) * 100)})
-        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': 'Eventos estudiante'})
+        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': '%Eventos estudiante'})
 
 
     count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id_curso, tipo=TiempoDedicadoCursoMoodle.DIA).aggregate(
@@ -96,7 +96,7 @@ def graficaTiempoSemanal(id_curso, id_std=None,idsGN=None):
     for semana in semanas:
         data.append({'x':datetime.strptime(str(semana['anyo']) +' ' + str(semana['week']) + ' 1', "%Y %W %w").strftime("%d/%m/%Y"),'y':((semana['s'] / count['total']) * 100)})
 
-    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'Eventos general'})
+    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': '%Eventos general'})
     chart['data'] = {'datasets': dataset}
 
     chart['options'] = {'scales': {'xAxes': [{'type': 'time', 'time': {'unit': 'day', 'round': 'day', 'parser': 'D/M/YYY'}}]},
@@ -130,7 +130,7 @@ def graficaTiempoHora(id_curso, id_std=None):
                                                           "#FFD558", "#3e96cd", "#5e5ea2", "#3c3a9f",
                                                           "#e823b9", "#c45810", "#CAA73D", "#7E444A",
                                                           "#C43148", "#C4219F", "#113EC4", "#AF29FF",
-                                                          "#18FFAD"], 'label': 'Eventos estudiante'})
+                                                          "#18FFAD"], 'label': '%Eventos estudiante'})
 
     horas = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id_curso, tipo=TiempoDedicadoCursoMoodle.HORA)
     count = TiempoDedicadoCursoMoodle.objects.filter(curso_id=id_curso, tipo=TiempoDedicadoCursoMoodle.HORA).aggregate(
@@ -171,18 +171,20 @@ def graficaTiempoMedioContexto(id_curso,id_std=None):
                 contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by( 'contexto__nombre'):
             labels.append(cuestionario['contexto__nombre'])
             data.append(cuestionario['media'] / 60)
+        texto = 'Tiempo en cada cuestionario'
     else:
         for cuestionario in TiempoInvertidoMaterialCursoMoodle.objects.filter(curso_id=id_curso).exclude(contexto__isnull=True).values('contexto__nombre').annotate(media=Avg('seconds')).order_by('contexto__nombre'):
             labels.append(cuestionario['contexto__nombre'])
             data.append(cuestionario['media']/60)
+        texto = 'Tiempo medio en cada cuestionario'
 
-        dataset.append({'data': data, 'label': 'Minutos','backgroundColor':"#3e95cd"})
+    dataset.append({'data': data, 'label': 'Minutos','backgroundColor':"#3e95cd"})
 
     chart['data'] = {'labels': labels, 'datasets': dataset}
     chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]},
                         'title': {
                             'display': 'true',
-                            'text': 'Tiempo medio en cada contexto',
+                            'text': texto,
                             'fontSize': 16
                         }
                         }
@@ -203,13 +205,13 @@ def graficaUsoArchivos(id_curso):
         labels.append(archivo.nombre)
         data.append((archivo.contador/ count['total'])*100)
 
-    dataset.append({'data': data, 'label': '% Eventos','backgroundColor':"#3e95cd"})
+    dataset.append({'data': data, 'label': '%Eventos','backgroundColor':"#3e95cd"})
 
     chart['data'] = {'labels': labels, 'datasets': dataset}
     chart['options'] = {'scales': {'xAxes': [{'ticks': {'minRotation': 85}}]},
                         'title': {
                             'display': 'true',
-                            'text': 'Media del uso de archivos',
+                            'text': 'Uso de archivos',
                             'fontSize': 16
                         }
                         }
@@ -224,13 +226,13 @@ def graficaTiempoInvertido(id_curso,id_std=None):
         for cuestionario in TiempoInvertidoEstudianteCursoMoodle.objects.filter(curso_id=id_curso,estudiante_id=id_std):
             data.append({'x': format(cuestionario.timestamp, "%d/%m/%Y"), 'y': (cuestionario.seconds/ 60)})
 
-        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': 'Estudiante'})
+        dataset.append({'data': data, 'borderColor': "#3e65cd", 'label': 'Minutos estudiante'})
 
     data = []
     for cuestionario in TiempoInvertidoEstudianteCursoMoodle.objects.values('timestamp').filter(curso_id=id_curso).annotate(media=Avg('seconds')).order_by('timestamp'):
         data.append({'x': format(cuestionario['timestamp'], "%d/%m/%Y"), 'y': (cuestionario['media'] / 60)})
 
-    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'General'})
+    dataset.append({'data': data, 'borderColor': "#3e95cd", 'label': 'Minutos'})
 
     chart['data'] = {'datasets': dataset}
     chart['options'] = {

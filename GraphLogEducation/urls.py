@@ -19,7 +19,6 @@ from django.contrib import admin
 from django.urls import include, path, reverse_lazy
 from django.views.generic import RedirectView
 
-from cursos.views import indexCursoView
 
 urlpatterns = [
     path('user/',include('usuarios.urls', namespace="user")),

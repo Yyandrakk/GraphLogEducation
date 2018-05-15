@@ -143,26 +143,16 @@ class updateCursoView(LoginRequiredMixin, generic.UpdateView):
             request, *args, **kwargs)
 
 
-def createChart(type, labels, data, tittle, label):
-    '''
-    :param type: Tipo de grafico
-    :param labels: Etiquetas del eje x
-    :param data: Datos del eje y
-    :param tittle: Titulo del grafico
-    :param label: Leyenda
-    :return:
-    '''
-
 
 def ajaxCharts(request):
     if not request.user.is_authenticated:
         jsonr = {'authenticated': False}
-        return JsonResponse(jsonr, mimetype='application/json')
+        return JsonResponse(jsonr, safe=False)
 
     charts = []
     id = request.GET.get('id', None)
     idsGN = request.GET.get('idsGN', None)
-    if id != None and CursoMoodle.objects.filter(pk=id).exists():
+    if id != None and CursoMoodle.objects.filter(pk=id,profesor_id=request.user.id).exists():
         # Grafica dia/#evento
         charts.append(graficaTiempo(id, idsGN=idsGN))
         # Grafica semana/#evento
@@ -183,12 +173,12 @@ def ajaxCharts(request):
 def ajaxSTDCharts(request):
     if not request.user.is_authenticated:
         jsonr = {'authenticated': False}
-        return JsonResponse(jsonr, mimetype='application/json')
+        return JsonResponse(jsonr,safe=False)
 
     charts = []
     id = request.GET.get('id', None)
     id_std = request.GET.get('id_std', None)
-    if id != None and id_std != None and EstudianteCursoMoodle.objects.filter(pk=id_std, curso_id=id).exists():
+    if id != None and id_std != None and CursoMoodle.objects.filter(pk=id,profesor_id=request.user.id).exists() and EstudianteCursoMoodle.objects.filter(pk=id_std, curso_id=id).exists():
         charts.append(graficaTiempo(id, id_std))
         charts.append(graficaTiempoSemanal(id, id_std))
         charts.append(graficaTiempoHora(id, id_std))

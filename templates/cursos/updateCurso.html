@@ -9,14 +9,14 @@
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-  <a class="navbar-brand" href="{% url "cursos:todos" %}">GraphLog Education</a>
+  <a class="navbar-brand" href="{% url "cursos:todos" %}"><img src="{%  static 'logo.png' %}" height="40" class="d-inline-block align-top" alt=""></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarDespegableTop">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
       </li>
       <li class="nav-item">
@@ -32,23 +32,7 @@
 {% endblock %}
 {% block contenido %}
 
-    {% if form.errors %}
-        <div class="alert alert-error">
-          <h4>Please fix the following errors</h4>
-          <ul>
-            {% for field in form %}
-              {% if field.errors %}
-                {% for error in field.errors %}
-                  <li><a href="#id_{{ field.name }}" class="error">{{ error|escape }}</a></li>
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
-          </ul>
-          {% if form.non_field_errors %}
-            {{ form.non_field_errors }}
-          {% endif %}
-        </div>
-    {% endif %}
+
 <section class=" mdb-color blue-grey lighten-4">
     <div class="container">
     <div class="card mt-4  blue-grey lighten-5">
@@ -61,22 +45,34 @@
                  <i class="fab fa-discourse fa-fw prefix grey-text"></i>
                 {{ form.nombre.label_tag }}
                 {{ form.nombre }}
+                 {% for error in form.nombre.errors %}
+                    <div class="invalid-feedback visible d-inline">{{ error|escape }}</div>
+                {% endfor %}
             </div>
             <div class="md-form">
                 <i class="fas fa-comment fa-fw prefix grey-text"></i>
                 {{ form.desc.label_tag }}
                 {{ form.desc }}
+                {% for error in form.desc.errors %}
+                    <div class="invalid-feedback visible d-inline">{{ error|escape }}</div>
+                {% endfor %}
             </div>
             <div class="md-form">
                 <i class="fas fa-clock fa-fw prefix grey-text"></i>
                 {{ form.umbral.label_tag }}
                 {{ form.umbral }}
+                {% for error in form.umbral.errors %}
+                    <div class="invalid-feedback visible d-inline">{{ error|escape }}</div>
+                {% endfor %}
             </div>
 
             <div class="md-form">
                 <i class="fas fa-file-excel fa-fw prefix grey-text"></i>
                 <label class="custom-file-label" for="{{ form.documento.id_for_label }}"> {{ form.documento.label }}</label>
                 <input name="documento" class="custom-file-input" id="{{ form.documento.auto_id }}" type="file">
+                {% for error in form.documento.errors %}
+                    <div class="invalid-feedback visible d-inline">{{ error|escape }}</div>
+                {% endfor %}
             </div>
             {% csrf_token %}
             <div class="row my-3 d-flex justify-content-center">
