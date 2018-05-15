@@ -3,16 +3,49 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mdb.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
     <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/fontawesome-all.min.js' %}"></script>
+
     {% block jsLoad %}{% endblock %}
     <title>{{ tittle|default:"GraphLogEducation" }}</title>
+
 </head>
-<body>
-       {% block navBarTop %}{% endblock %}
-       {% block navBarLeft %}{% endblock %}
-       {% block contenido %}{% endblock %}
+<body class="mdb-color blue-grey lighten-4">
+<header>
+    {% block navBarTop %}{% endblock %}
+</header>
+
+<main class="pb-4" role="main">
+    {% block contenido %}{% endblock %}
+</main>
+
+<footer class="footer page-footer font-small elegant-color pt-2">
+
+    <div class="container-fluid text-center text-md-left">
+        <div class="row">
+
+            <div class="col-md-6">
+                <h5 class="text-uppercase">Graph Log Education</h5>
+                <p>Proyecto de software libre que permite visulizar los logs de Moodle</p>
+            </div>
+            <div class="col-md-6">
+                <h5 class="text-uppercase">Links</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a class="btn btn-outline-default btn-sm" href=" https://github.com/yyandrakk/GraphLogEducation"><i class="fab fa-github pr-1"></i> Github</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/mdb.min.js' %}"></script>
+{% block jsBody %}{% endblock %}
+
 </html>

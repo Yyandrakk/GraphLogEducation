@@ -8,6 +8,17 @@ class FormCursoMoodle(forms.ModelForm):
     class Meta():
         model = CursoMoodle
         fields = ("nombre","desc","umbral", "documento")
+        labels = {
+            "desc": "Descripción"
+        }
+        help_texts = {
+            'nombre': ('Titulo del curso'),
+        }
+        error_messages = {
+            'nombre': {
+                'max_length': ("Ha superado el tamaño maximo"),
+            },
+        }
 
     def __init__(self,*args,**kwargs):
         self.user = kwargs.pop("instance", None)
@@ -28,6 +39,71 @@ class FormCursoMoodle(forms.ModelForm):
             })
 
         return datos
+
+class FormUpdateCMoodle(forms.ModelForm):
+
+    class Meta():
+        model = CursoMoodle
+        fields = ["desc","umbral", "documento"]
+        labels = {
+            "desc": "Descripción"
+        }
+
+
+    def __init__(self,*args,**kwargs):
+        self.user = kwargs.pop("instance", None)
+        super(FormUpdateCMoodle,self).__init__(*args,**kwargs)
+        for v in self.visible_fields():
+            v.field.required = False
+            v.field.widget.attrs['class'] = 'form-control'
+
+        self.fields['documento'].widget.attrs['class'] = 'custom-file-input'
+        self.fields['documento'].required = False
+
+    def clean(self):
+        datos = super(FormUpdateCMoodle,self).clean()
+        return datos
+
+    def save(self, commit=True):
+        instance = super(FormUpdateCMoodle, self).save(commit=False)
+
+        for e in self.changed_data:
+            if e=='desc':
+                instance.desc = self.cleaned_data[e]
+            elif e=='documento':
+                instance.documento= self.cleaned_data[e]
+            elif e == 'umbral':
+                instance.umbral = self.cleaned_data[e]
+
+        if commit:
+            instance.save(update_fields=self.changed_data)
+
+        return instance
+
+
+class ConfirmDeleteForm(forms.ModelForm):
+    confirm = forms.CharField(label='Introduzca el nombre del curso', max_length=100)
+
+    class Meta:
+        model = CursoMoodle
+        fields = []
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("instance", None)
+        super(ConfirmDeleteForm, self).__init__(*args, **kwargs)
+        for v in self.visible_fields():
+            v.field.widget.attrs['class'] = 'form-control'
+
+    def clean(self):
+        confirm = super().clean().get('confirm')
+
+        if self.instance.nombre.lower() != confirm.lower():
+            raise forms.ValidationError({
+                'confirm': forms.ValidationError('Nombre incorrecto', code='invalid'),
+            })
+
+
+
 
 
 

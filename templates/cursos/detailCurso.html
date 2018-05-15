@@ -1,81 +1,121 @@
+{% extends  "Base/base.html"%}
 {% load staticfiles %}
-{% include  "Base/base.html" with tittle=curso.nombre%}
-{% block jsLoad %}<script src="{% static 'js/Chart.bundle.min.js' %}"></script>{% endblock %}
+{% block jsLoad %}
+    <script src="{% static 'js/moment-with-locales.js' %}"></script>
+    <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}" />
+    <script src="{% static 'js/select2.full.min.js' %}"></script>
+
+{% endblock %}
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-  <a class="navbar-brand" href="{% url "cursos:todos" %}">GraphLog Education</a>
+  <a class="navbar-brand" href="{% url "cursos:todos" %}"><img src="{%  static 'logo.png' %}" height="40" class="d-inline-block align-top" alt=""></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarDespegableTop">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
     </ul>
+          <ul class="navbar-nav navbar-right">
+      <li class="nav-item"><h5 class="h5-responsive white-text">Bienvenido {{ user.first_name }}</h5></li>
+   </ul>
   </div>
 </nav>
 
 {% endblock %}
 
 {% block contenido %}
-<div class="jumbotron">
-    <div class="container">
+<div class="mt-3 mdb-color blue-grey lighten-4 mb-5">
+    <div class="container p-3 mdb-color blue-grey lighten-5 z-depth-1">
         <div class="row">
-            <div class="col"><h1 class="h1 align-content-center">{{ curso.nombre }}</h1></div>
+            <div class="col"><h1 class="h1-responsive align-content-center">{{ curso.nombre }}</h1></div>
             <div class="col">
                 <nav aria-label="Paginado tipo de grafica">
-                    <ul class="pagination">
+                    <ul class="pagination pagination-circle pg-bluegrey">
                         <li id="liGeneral" class="page-item active">
                             <a class="page-link" href="javascript: cambioPestanya(false);">General</a>
                         </li>
-                        <li id="liSTD" class="page-item"><a class="page-link" href="javascript: cambioPestanya(true);">Estudiantes</a></li>
+                        <li id="liSTD" class="page-item">
+                            <a class="page-link" href="javascript: cambioPestanya(true);">Estudiantes</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
-            <div id="divSelect" class="col invisible">
-                <select class="custom-select" id="selectSTD">
+            <div id="divSelectSTD" class="col d-none">
+                <label for="selectSTD">Estudiantes:</label>
+                <select  id="selectSTD"  class="js-example-basic-single">
                 {% for estudiante in estudiantes %}
                     <option value="{{estudiante.id}}">{{estudiante.nombre}}</option>
                 {% endfor %}
                 </select>
             </div>
+            <div id="divSelectGN" class="col">
+                <label for="selectGN">Cursos:</label>
+                <select id="selectGN"  class="js-example-basic-single" multiple="multiple">
+                {% for curso in otrosCursos %}
+                    <option value="{{curso.id}}">{{curso.nombre}}</option>
+                {% endfor %}
+                </select>
+                <button class="btn btn-sm btn-default" onclick="pestanyaGeneral()">Actualizar</button>
+            </div>
         </div>
 
-
-                
-
-        <div id="container_charts" class="container-fluid">
+        <div id="carousel_charts" class="carousel slide carousel-fade" data-ride="carousel">
+            <ol id="olIndicator" class="carousel-indicators">
+            </ol>
+            <div id="container_charts" class="carousel-inner"></div>
+            <a class=" carousel-control-prev" href="#carousel_charts" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel_charts" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
     </div>
     </div>
+{% endblock %}
 
-<script>
+{% block jsBody %}
+    <script>
 
      $(document).ready(function() {
          pestanyaGeneral();
          $("#selectSTD").on('change', function () {
              pestanyaUsuarios();
          });
+
+          $('#selectSTD').select2();
+          $('#selectGN').select2({
+              maximumSelectionLength: 2,
+               placeholder: "Seleccione dos",
+              width: '40%'
+          });
      });
 
      function cambioPestanya(esUsuarios) {
-        var divSel= $("#divSelect");
-
+        var divSelSTD= $("#divSelectSTD");
+        var divSelGN= $("#divSelectGN");
         if(esUsuarios){
-            divSel.attr('class', 'col visible');
-            $("#liGeneral").attr('class','page-item');
-            $("#liSTD").attr('class','page-item active');
+            divSelSTD.removeClass('d-none');
+            divSelGN.addClass('d-none');
+            $("#liGeneral").removeClass('active');
+            $("#liSTD").addClass('active');
             pestanyaUsuarios();
         }else{
-           divSel.attr('class', 'col invisible');
-           $("#liGeneral").attr('class','page-item active');
-           $("#liSTD").attr('class','page-item');
+            divSelGN.removeClass('d-none');
+            divSelSTD.addClass('d-none');
+           $("#liGeneral").addClass('active');
+           $("#liSTD").removeClass('active');
            pestanyaGeneral();
         }
 
@@ -97,11 +137,13 @@
      }
 
      function pestanyaGeneral(){
+        var id_GN=$("#selectGN").val();
         $.ajax({
              type:"GET",
              url:"{% url "cursos:ajaxGeneral" %}",
              data: {
-                'id': {{ curso.id }}
+                'id': {{ curso.id }},
+                 'idsGN': JSON.stringify(id_GN)
              },
              dataType: 'json',
              success:crearGraficos
@@ -111,22 +153,26 @@
 
 
     function crearGraficos(datos,status,xhr) {
-        var col = 0;
-        var row=0;
+
         var divContainer = $("#container_charts");
+        var olIndicators = $("#olIndicator");
         divContainer.empty();
+        olIndicators.empty();
         datos.forEach(function (value, index) {
-            if(col === 1){
-                col=0;
-                row++;
+
+            if(index===0){
+                olIndicators.append("<li data-target=\"#carousel_charts\" data-slide-to=\""+index+"\" class=\"active\"></li>");
+                divContainer.append("<div class=\"carousel-item active\"><canvas class=\"d-block w-100\" id=\"chart-"+index+"\" ></canvas></div>");
             }
-            if(col === 0){
-                divContainer.append("<div id=\"row"+row+"\" class=\"row\">");
+            else{
+                olIndicators.append("<li data-target=\"#carousel_charts\" data-slide-to=\""+index+"\"></li>");
+                divContainer.append("<div class=\"carousel-item\"><canvas class=\"d-block w-100\" id=\"chart-"+index+"\" ></canvas></div>");
             }
-            $("#row"+row).append("<div class=\"col\"><canvas id=\"chart-"+index+"\" width=\"800\" height=\"450\"></canvas></div>");
             new Chart($("#chart-"+index), value);
-            col++
+
         });
+
+        $('.carousel').carousel('pause');
 
     }
 </script>

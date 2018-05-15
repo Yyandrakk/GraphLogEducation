@@ -1,27 +1,36 @@
-{% include  "Base/base.html" with tittle="Cursos"%}
+{% extends  "Base/base.html"%}
+{% load staticfiles %}
+{% block jsLoad %}
+<meta http-equiv="refresh" content="30"/>
+{% endblock %}
 {% block navBarTop %}
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-  <a class="navbar-brand" href="{% url "cursos:todos" %}">GraphLog Education</a>
+  <a class="navbar-brand" href="{% url "cursos:todos" %}"><img src="{%  static 'logo.png' %}" height="40" class="d-inline-block align-top" alt=""></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarDespegableTop">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
       </li>
+
     </ul>
+    <ul class="navbar-nav navbar-right">
+      <li class="nav-item"><h5 class="h5-responsive white-text">Bienvenido {{ user.first_name }}</h5></li>
+   </ul>
   </div>
 </nav>
 
 {% endblock %}
 {% block contenido %}
-<section class="py-5 bg-light">
+
+<section class="mt-3">
     <div class="container">
         <div class="row mb-sm-2">
              <a class="btn btn-primary" href="{% url "cursos:add" %}">Añadir curso</a>
@@ -29,12 +38,14 @@
         <div class="row">
             <div class="card-columns">
                 {% for curso in curso_list %}
-                   <div class="card bg-light">
+                   <div class="card  blue-grey lighten-5">
                         <div class="card-header">
                             {% if curso.procesado %}
                                 <a class="card-link" href="{% url "cursos:detail" slug=curso.slug %}">{{ curso.nombre }}</a>
+                                <a class="float-right" href="{% url "cursos:update" slug=curso.slug %}"><i class="fas fa-cog fa-2x"></i></a>
                             {% else %}
                                 <a class="card-link disabled">{{ curso.nombre }}</a>
+                                <a class="float-right"><i class="fas fa-sync fa-spin fa-2x"></i>    </a>
                             {% endif %}
                         </div>
                         <div class="card-body">
@@ -52,4 +63,5 @@
     </div>
     </div>
 </section>
+
 {% endblock %}

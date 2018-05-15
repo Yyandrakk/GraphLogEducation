@@ -1,0 +1,62 @@
+{% extends  "Base/base.html"%}
+{% load staticfiles %}
+{% block navBarTop %}
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+  <a class="navbar-brand" href="{% url "cursos:todos" %}"><img src="{%  static 'logo.png' %}" height="40" class="d-inline-block align-top" alt=""></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarDespegableTop" aria-controls="navbarDespegableTop" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarDespegableTop">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "cursos:todos" %}">Cursos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "user:logout" %}">Salir</a>
+      </li>
+    </ul>
+          <ul class="navbar-nav navbar-right">
+      <li class="nav-item"><h5 class="h5-responsive white-text">Bienvenido {{ user.first_name }}</h5></li>
+   </ul>
+  </div>
+</nav>
+
+{% endblock %}
+{% block contenido %}
+
+<section class=" mdb-color blue-grey lighten-4">
+    <div class="container">
+    <div class="card mt-4  blue-grey lighten-5">
+        <div class="card-header h3-responsive">
+            {{ curso.nombre }}
+        </div>
+        <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="md-form">
+                 <i class="fab fa-discourse fa-fw prefix grey-text"></i>
+                {{ form.confirm.label_tag }}
+                {{ form.confirm }}
+
+                {% for error in form.confirm.errors %}
+                    <div class="invalid-feedback visible d-inline">{{ error|escape }}</div>
+                {% endfor %}
+
+            </div>
+            {% csrf_token %}
+            <div class="row my-3 d-flex justify-content-center">
+            <div class="text-center py-4 mt-3">
+                <button class="btn btn-danger"  type="submit">Eliminar<i class="fas fa-exclamation-triangle fa-lg pl-1"></i></button>
+            </div>
+            <div class="text-center py-4 mt-3">
+                <a class="btn btn-dark-green" href="{% url "cursos:update" slug=curso.slug %}" id="volver">Volver<i class="fas fa-undo fa-lg pl-1"></i></a>
+            </div>
+            </div>
+        </form>
+    </div>
+            </div>
+    </div>
+    </section>
+
+{% endblock %}
