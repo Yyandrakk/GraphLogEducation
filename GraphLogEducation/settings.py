@@ -28,9 +28,9 @@ MEDIA_DIR = os.path.join(BASE_DIR,'media')
 SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['graphlogeducation.azurewebsites.net','graphlogeducation.herokuapp.com','127.0.0.1','localhost']
 
 
 # Application definition
@@ -152,8 +152,17 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
+from GraphLogEducation.local_settings import *
+DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
+    'NAME': 'test',
+    'USER': DB_USER,
+    'PASSWORD': DB_PASS,
+    'HOST': 'localhost',
+    'PORT': '',
+}
+SECRET_KEY = key
 
-
+'''
 DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
     'NAME': os.environ.get('DB_DB'),
     'USER': os.environ.get('DB_U'),
@@ -165,5 +174,5 @@ DATABASES['default']={'ENGINE':'django.db.backends.postgresql',
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-
+'''
 
