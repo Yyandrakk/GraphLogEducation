@@ -8,9 +8,19 @@ from cursos.models import TiempoDedicadoCursoMoodle, TiempoDedicadoEstudianteCur
     TiempoInvertidoMaterialCursoMoodle, \
     CursoMoodle, TiempoInvertidoEstudianteCursoMoodle, MaterialCursoMoodle
 
+'''
+Este archivo contiene funciones que devuelven JSON para crear graficas ChartJS
+'''
 colors = ['#8bc34a','#00cc66']
 
 def graficaTiempo(id_curso, id_std=None, idsGN=None):
+    '''
+    Devuelve la grafica evento/dia del modelo TiempoDedicadoCursoMoodle o TiempoDedicadoEstudianteCursoMoodle
+    :param id_curso: Id del curso
+    :param id_std: Id del estudiante
+    :param idsGN: Ids de otros cursos para el caso general
+    :return: JSON
+    '''
     chart = {'type': 'line'}
     dataset = []
     if idsGN!=None:
@@ -57,6 +67,13 @@ def graficaTiempo(id_curso, id_std=None, idsGN=None):
 
 
 def graficaTiempoSemanal(id_curso, id_std=None,idsGN=None):
+    '''
+    Devuelve la grafica evento/semana del modelo TiempoDedicadoCursoMoodle o TiempoDedicadoEstudianteCursoMoodle
+    :param id_curso: Id del curso
+    :param id_std: Id del estudiante
+    :param idsGN: Ids de otros cursos para el caso general
+    :return: JSON
+    '''
     chart = {'type': 'line'}
     dataset = []
     data = []
@@ -111,7 +128,12 @@ def graficaTiempoSemanal(id_curso, id_std=None,idsGN=None):
 
 
 def graficaTiempoHora(id_curso, id_std=None):
-
+    '''
+    Devuelve la grafica evento/hora del modelo TiempoDedicadoCursoMoodle o TiempoDedicadoEstudianteCursoMoodle
+    :param id_curso: Id del curso
+    :param id_std: Id del estudiante
+    :return: JSON
+    '''
     chart = {'type': 'bar'}
     labels = []
     data = []
@@ -160,7 +182,12 @@ def graficaTiempoHora(id_curso, id_std=None):
 
 
 def graficaTiempoMedioContexto(id_curso,id_std=None):
-
+    '''
+    Devuelve la grafica Tiempo medio/cuestionario del modelo TiempoInvertidoMaterialCursoMoodle
+    :param id_curso: Id del curso
+    :param id_std: Id del estudiante
+    :return: JSON
+    '''
     chart = {'type': 'bar'}
     labels = []
     data = []
@@ -191,7 +218,11 @@ def graficaTiempoMedioContexto(id_curso,id_std=None):
     return chart
 
 def graficaUsoArchivos(id_curso):
-
+    '''
+       Devuelve la grafica evento/material del modelo MaterialCursoMoodle
+       :param id_curso: Id del curso
+       :return: JSON
+    '''
     chart = {'type': 'bar'}
     labels = []
     data = []
@@ -218,6 +249,12 @@ def graficaUsoArchivos(id_curso):
     return chart
 
 def graficaTiempoInvertido(id_curso,id_std=None):
+    '''
+       Devuelve la grafica tiempo invertido estimado/material del modelo MaterialCursoMoodle
+       :param id_curso: Id del curso
+       :param id_std: Id del estudiante
+       :return: JSON
+    '''
     chart = {'type': 'line'}
     dataset = []
 

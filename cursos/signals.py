@@ -10,6 +10,12 @@ from .models import CursoMoodle, EstudianteCursoMoodle, MaterialCursoMoodle, Tie
 
 class ProcesarFicheroThread(threading.Thread):
     def __init__(self, curso,solo_umbral ,**kwargs):
+        '''
+        Lanza el hilo para el signal
+        :param curso: Curso cual se procesa
+        :param solo_umbral: Solo se procesa la grafica donde se usa el umbral
+        :param kwargs:
+        '''
         self.instance = curso
         self.todo = not solo_umbral
         super(ProcesarFicheroThread, self).__init__(**kwargs)
